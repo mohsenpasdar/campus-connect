@@ -1,49 +1,105 @@
-// DOM Elements
-const loginForm = document.getElementById('login-form');
-const emailInput = document.getElementById('email');
-const passwordInput = document.getElementById('password');
-const togglePasswordBtn = document.querySelector('.toggle-password');
-const demoProfiles = document.querySelectorAll('.demo-profile');
+import Cookies from './utils/cookies.js';
 
-// Event Listeners
 document.addEventListener('DOMContentLoaded', () => {
-    setupEventListeners();
-});
+    // Get form elements
+    const loginForm = document.getElementById('login-form');
+    const emailInput = document.getElementById('email');
+    const passwordInput = document.getElementById('password');
+    const togglePasswordBtn = document.querySelector('.toggle-password');
+    const demoProfiles = document.querySelectorAll('.demo-profile');
 
-function setupEventListeners() {
+    // Check if already logged in
+    const userData = Cookies.get('userData');
+    const isLoggedIn = Cookies.get('isLoggedIn');
+    if (userData && isLoggedIn) {
+        window.location.href = 'index.html';
+        return;
+    }
+
     // Handle login form submission
-    loginForm.addEventListener('submit', handleLogin);
+    if (loginForm) {
+        loginForm.addEventListener('submit', (e) => {
+            e.preventDefault();
+            const email = emailInput.value;
+            const password = passwordInput.value;
+            const remember = document.getElementById('remember').checked;
+
+            if (!validateEmail(email)) {
+                showError(emailInput, 'Please enter a valid email address');
+                return;
+            }
+
+            if (password.length < 6) {
+                showError(passwordInput, 'Password must be at least 6 characters');
+                return;
+            }
+
+            // In a real app, this would validate with a server
+            handleLogin({
+                name: email.split('@')[0],
+                email: email,
+                avatar: `https://avatar.iran.liara.run/public/job/teacher/female`,
+            }, remember);
+        });
+    }
+
+    // Handle demo profile clicks
+    demoProfiles.forEach(profile => {
+        profile.addEventListener('click', () => {
+            const role = profile.dataset.role;
+            let userData;
+
+            switch(role) {
+                case 'student':
+                    userData = {
+                        name: 'Demo Student',
+                        email: 'student@university.edu',
+                        avatar: 'https://avatar.iran.liara.run/public/job/teacher/female',
+                        role: 'student'
+                    };
+                    break;
+                case 'leader':
+                    userData = {
+                        name: 'Demo Leader',
+                        email: 'leader@university.edu',
+                        avatar: 'https://avatar.iran.liara.run/public/job/lawyer/male',
+                        role: 'leader'
+                    };
+                    break;
+                case 'organizer':
+                    userData = {
+                        name: 'Demo Organizer',
+                        email: 'organizer@university.edu',
+                        avatar: 'https://avatar.iran.liara.run/public/job/operator/female',
+                        role: 'organizer'
+                    };
+                    break;
+            }
+
+            handleLogin(userData, true);
+        });
+    });
 
     // Toggle password visibility
-    togglePasswordBtn.addEventListener('click', togglePasswordVisibility);
-
-    // Handle demo profile selection
-    demoProfiles.forEach(profile => {
-        profile.addEventListener('click', handleDemoProfile);
-    });
-}
-
-// Form Validation and Submission
-function handleLogin(event) {
-    event.preventDefault();
-
-    // Basic form validation
-    if (!validateEmail(emailInput.value)) {
-        showError(emailInput, 'Please enter a valid university email address');
-        return;
+    if (togglePasswordBtn) {
+        togglePasswordBtn.addEventListener('click', () => {
+            const type = passwordInput.type === 'password' ? 'text' : 'password';
+            passwordInput.type = type;
+            togglePasswordBtn.textContent = type === 'password' ? '👁️' : '👁️‍🗨️';
+        });
     }
+});
 
-    if (passwordInput.value.length < 8) {
-        showError(passwordInput, 'Password must be at least 8 characters long');
-        return;
-    }
-
-    // In a real app, this would send the credentials to a server
-    // For demo purposes, we'll just simulate a successful login
-    simulateLogin({
-        email: emailInput.value,
-        remember: loginForm.querySelector('[name="remember"]').checked
-    });
+function handleLogin(userData, remember = false) {
+    // Set cookie expiration based on "remember me" option
+    const expirationDays = remember ? 30 : 1;
+    
+    // Store user data in cookies
+    Cookies.set('userData', userData, expirationDays);
+    Cookies.set('isLoggedIn', true, expirationDays);
+    
+    // Redirect to home page
+    window.location.href = 'index.html';
 }
 
 function validateEmail(email) {
@@ -74,59 +130,9 @@ function showError(input, message) {
         const error = formGroup.querySelector('.error-message');
         if (error) {
             error.remove();
-            input.style.borderColor = '#e5e7eb';
+            input.style.borderColor = '';
         }
     }, 3000);
-}
-
-// Password Visibility Toggle
-function togglePasswordVisibility() {
-    const type = passwordInput.type === 'password' ? 'text' : 'password';
-    passwordInput.type = type;
-    togglePasswordBtn.textContent = type === 'password' ? '👁️' : '👁️‍🗨️';
-}
-
-// Demo Profile Selection
-function handleDemoProfile(event) {
-    const profile = event.currentTarget.dataset.profile;
-    const demoUsers = {
-        student: {
-            email: 'student@university.edu',
-            name: 'Demo Student',
-            role: 'student'
-        },
-        'club-leader': {
-            email: 'leader@university.edu',
-            name: 'Demo Club Leader',
-            role: 'club-leader'
-        },
-        'event-organizer': {
-            email: 'organizer@university.edu',
-            name: 'Demo Event Organizer',
-            role: 'event-organizer'
-        }
-    };
-
-    // Simulate login with demo profile
-    simulateLogin(demoUsers[profile]);
-}
-
-// Login Simulation
-function simulateLogin(userData) {
-    // Show loading state
-    const loginButton = loginForm.querySelector('button[type="submit"]');
-    const originalText = loginButton.textContent;
-    loginButton.disabled = true;
-    loginButton.textContent = 'Signing in...';
-
-    // Simulate API call
-    setTimeout(() => {
-        // In a real app, this would be handled by your authentication system
-        localStorage.setItem('user', JSON.stringify(userData));
-        
-        // Redirect to home page
-        window.location.href = 'index.html';
-    }, 1000);
 }
 
 // Clear stored credentials on page load if not "remember me"

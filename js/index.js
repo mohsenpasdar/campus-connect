@@ -1,14 +1,104 @@
+import Cookies from './utils/cookies.js';
+
 // DOM Elements
 const postForm = document.getElementById('post-form');
 const postSearch = document.getElementById('post-search');
 const filterGroups = document.getElementById('filter-groups');
 const postsFeed = document.querySelector('.posts-feed');
 
-// Event Listeners
 document.addEventListener('DOMContentLoaded', () => {
-    // Initialize any necessary UI elements
+    initializeUserInterface();
     setupEventListeners();
 });
+
+function initializeUserInterface() {
+    const loggedInView = document.getElementById('logged-in-view');
+    const loggedOutView = document.getElementById('logged-out-view');
+    const createPostSection = document.querySelector('.create-post');
+
+    // Check login state
+    const isLoggedIn = Cookies.get('isLoggedIn');
+    const userData = Cookies.get('userData');
+
+    if (isLoggedIn && userData) {
+        // Show logged in view
+        if (loggedInView) loggedInView.style.display = 'block';
+        if (loggedOutView) loggedOutView.style.display = 'none';
+        if (createPostSection) createPostSection.style.display = 'block';
+
+        // Update user interface with user data
+        updateUserInterface(userData);
+    } else {
+        // Show logged out view
+        if (loggedInView) loggedInView.style.display = 'none';
+        if (loggedOutView) loggedOutView.style.display = 'block';
+        if (createPostSection) createPostSection.style.display = 'none';
+
+        // Redirect to login if trying to access protected features
+        const requiresAuth = document.querySelector('meta[name="requires-auth"]');
+        if (requiresAuth) {
+            window.location.href = 'login.html';
+        }
+    }
+
+    // Setup user menu functionality
+    setupUserMenu();
+}
+
+function updateUserInterface(userData) {
+    // Update header user info
+    const usernameElement = document.querySelector('.username');
+    const headerAvatar = document.querySelector('.header-avatar');
+    const postAvatars = document.querySelectorAll('.post .avatar');
+
+    if (usernameElement) {
+        usernameElement.textContent = userData.name;
+    }
+
+    if (headerAvatar) {
+        headerAvatar.src = userData.avatar;
+        headerAvatar.alt = `${userData.name}'s avatar`;
+    }
+
+    // Update post form if it exists
+    const postForm = document.getElementById('post-form');
+    if (postForm) {
+        const textarea = postForm.querySelector('textarea');
+        if (textarea) {
+            textarea.placeholder = `What's on your mind, ${userData.name.split(' ')[0]}?`;
+        }
+    }
+}
+
+function setupUserMenu() {
+    const profileTrigger = document.querySelector('.profile-trigger');
+    const userMenu = document.querySelector('.user-menu');
+    const logoutBtn = document.getElementById('logout-btn');
+
+    // Toggle dropdown menu
+    if (profileTrigger && userMenu) {
+        profileTrigger.addEventListener('click', (e) => {
+            e.stopPropagation();
+            userMenu.classList.toggle('active');
+        });
+
+        // Close menu when clicking outside
+        document.addEventListener('click', (e) => {
+            if (!userMenu.contains(e.target)) {
+                userMenu.classList.remove('active');
+            }
+        });
+    }
+
+    // Handle logout
+    if (logoutBtn) {
+        logoutBtn.addEventListener('click', () => {
+            Cookies.delete('isLoggedIn');
+            Cookies.delete('userData');
+            window.location.href = 'login.html';
+        });
+    }
+}
 
 function setupEventListeners() {
     // Handle post form submission

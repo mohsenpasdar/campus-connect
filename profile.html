@@ -1,0 +1,222 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="requires-auth" content="true">
+    <title>My Profile - CampusConnect</title>
+    <link rel="stylesheet" href="css/theme.css">
+    <link rel="stylesheet" href="css/profile.css">
+</head>
+<body>
+    <header>
+        <nav class="main-nav">
+            <div class="logo">
+                <a href="index.html">CampusConnect</a>
+            </div>
+            <ul class="nav-links">
+                <li><a href="index.html">Home</a></li>
+                <li><a href="groups.html">Groups</a></li>
+                <li><a href="about.html">About</a></li>
+                <li><a href="contact.html">Contact</a></li>
+                <li><a href="faq.html">FAQ</a></li>
+                <li>
+                    <button id="theme-toggle" class="theme-toggle" aria-label="Toggle dark mode">
+                        🌛
+                    </button>
+                </li>
+            </ul>
+            <div class="user-actions" id="logged-in-view">
+                <div class="user-menu">
+                    <button class="profile-trigger">
+                        <img src="" alt="" class="header-avatar">
+                        <span class="username"></span>
+                        <span class="dropdown-arrow">▼</span>
+                    </button>
+                    <div class="dropdown-menu">
+                        <a href="profile.html" class="active">My Profile</a>
+                        <a href="settings.html">Settings</a>
+                        <button id="logout-btn" class="logout-btn">Logout</button>
+                    </div>
+                </div>
+            </div>
+        </nav>
+    </header>
+
+    <main class="profile-container">
+        <section class="profile-header">
+            <div class="profile-cover">
+                <button class="edit-cover">Edit Cover Photo</button>
+            </div>
+            <div class="profile-info">
+                <div class="profile-avatar-container">
+                    <img src="" alt="" class="profile-avatar">
+                    <button class="edit-avatar">Edit</button>
+                </div>
+                <div class="profile-details">
+                    <h1 class="profile-name"></h1>
+                    <p class="profile-role"></p>
+                    <p class="profile-email"></p>
+                </div>
+            </div>
+        </section>
+
+        <section class="profile-content">
+            <div class="profile-tabs">
+                <button class="tab-btn active" data-tab="about">About</button>
+                <button class="tab-btn" data-tab="posts">Posts</button>
+                <button class="tab-btn" data-tab="groups">Groups</button>
+                <button class="tab-btn" data-tab="settings">Settings</button>
+            </div>
+
+            <div class="tab-content">
+                <!-- About Tab -->
+                <div id="about" class="tab-panel active">
+                    <div class="profile-section">
+                        <h2>About Me</h2>
+                        <div class="editable-field">
+                            <p class="bio-text"></p>
+                            <button class="edit-btn">Edit</button>
+                        </div>
+                    </div>
+
+                    <div class="profile-section">
+                        <h2>Personal Information</h2>
+                        <div class="info-grid">
+                            <div class="info-item">
+                                <label>Major</label>
+                                <div class="editable-field">
+                                    <span class="major-text"></span>
+                                    <button class="edit-btn">Edit</button>
+                                </div>
+                            </div>
+                            <div class="info-item">
+                                <label>Year</label>
+                                <div class="editable-field">
+                                    <span class="year-text"></span>
+                                    <button class="edit-btn">Edit</button>
+                                </div>
+                            </div>
+                            <div class="info-item">
+                                <label>Interests</label>
+                                <div class="editable-field">
+                                    <div class="interests-tags"></div>
+                                    <button class="edit-btn">Edit</button>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Posts Tab -->
+                <div id="posts" class="tab-panel">
+                    <div class="posts-grid">
+                        <!-- Posts will be loaded dynamically -->
+                    </div>
+                </div>
+
+                <!-- Groups Tab -->
+                <div id="groups" class="tab-panel">
+                    <div class="groups-grid">
+                        <!-- Groups will be loaded dynamically -->
+                    </div>
+                </div>
+
+                <!-- Settings Tab -->
+                <div id="settings" class="tab-panel">
+                    <div class="settings-section">
+                        <h2>Profile Settings</h2>
+                        <form id="profile-settings-form">
+                            <div class="form-group">
+                                <label for="display-name">Display Name</label>
+                                <input type="text" id="display-name" name="displayName">
+                            </div>
+                            <div class="form-group">
+                                <label for="email">Email</label>
+                                <input type="email" id="email" name="email">
+                            </div>
+                            <div class="form-group">
+                                <label for="avatar-type">Avatar Type</label>
+                                <select id="avatar-type" name="avatarType">
+                                    <option value="job">Professional Avatar</option>
+                                    <option value="username">Name-based Avatar</option>
+                                </select>
+                            </div>
+                            <div class="form-group" id="job-avatar-options">
+                                <label for="job-type">Professional Role</label>
+                                <select id="job-type" name="jobType">
+                                    <option value="teacher">Teacher</option>
+                                    <option value="lawyer">Lawyer</option>
+                                    <option value="doctor">Doctor</option>
+                                    <option value="designer">Designer</option>
+                                    <option value="chef">Chef</option>
+                                    <option value="farmer">Farmer</option>
+                                    <option value="firefighter">Firefighter</option>
+                                    <option value="operator">Operator</option>
+                                    <option value="astronomer">Astronomer</option>
+                                </select>
+                                <div class="gender-select">
+                                    <label>
+                                        <input type="radio" name="gender" value="male"> Male
+                                    </label>
+                                    <label>
+                                        <input type="radio" name="gender" value="female"> Female
+                                    </label>
+                                </div>
+                            </div>
+                            <button type="submit" class="save-settings">Save Changes</button>
+                        </form>
+                    </div>
+
+                    <div class="settings-section">
+                        <h2>Privacy Settings</h2>
+                        <div class="privacy-options">
+                            <label class="toggle-switch">
+                                <input type="checkbox" id="profile-visibility">
+                                <span class="toggle-slider"></span>
+                                Make profile public
+                            </label>
+                            <label class="toggle-switch">
+                                <input type="checkbox" id="email-visibility">
+                                <span class="toggle-slider"></span>
+                                Show email to other users
+                            </label>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+    </main>
+
+    <footer>
+        <div class="footer-content">
+            <div class="footer-section">
+                <h4>About CampusConnect</h4>
+                <p>Connecting university students, one post at a time.</p>
+            </div>
+            <div class="footer-section">
+                <h4>Quick Links</h4>
+                <ul>
+                    <li><a href="about.html">About Us</a></li>
+                    <li><a href="contact.html">Contact</a></li>
+                    <li><a href="faq.html">FAQ</a></li>
+                </ul>
+            </div>
+            <div class="footer-section">
+                <h4>Connect With Us</h4>
+                <div class="social-links">
+                    <a href="#" aria-label="Facebook">📘</a>
+                    <a href="#" aria-label="Twitter">🐦</a>
+                    <a href="#" aria-label="Instagram">📸</a>
+                </div>
+            </div>
+        </div>
+        <div class="footer-bottom">
+            <p>&copy; 2024 CampusConnect. All rights reserved.</p>
+        </div>
+    </footer>
+
+    <script src="js/theme.js"></script>
+    <script type="module" src="js/profile.js"></script>
+</body>
+</html>

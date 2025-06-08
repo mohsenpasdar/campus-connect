@@ -11,7 +11,7 @@
     <header>
         <nav class="main-nav">
             <div class="logo">
-                <h1>CampusConnect</h1>
+                <a href="index.html">CampusConnect</a>
             </div>
             <ul class="nav-links">
                 <li><a href="index.html">Home</a></li>
@@ -21,69 +21,73 @@
                 <li><a href="faq.html">FAQ</a></li>
                 <li>
                     <button id="theme-toggle" class="theme-toggle" aria-label="Toggle dark mode">
-                        🌞
+                        🌛
                     </button>
                 </li>
             </ul>
         </nav>
     </header>
 
-    <main class="login-container">
-        <section class="login-box">
-            <h2>Welcome Back!</h2>
-            <p class="login-subtitle">Sign in to connect with your campus community</p>
+    <main>
+        <div class="login-container">
+            <div class="login-box">
+                <h1>Welcome Back!</h1>
+                <p class="subtitle">Sign in to connect with your campus community</p>
 
-            <form id="login-form" class="login-form">
-                <div class="form-group">
-                    <label for="email">University Email</label>
-                    <input type="email" id="email" name="email" required 
-                           pattern="[a-z0-9._%+-]+@[a-z0-9.-]+\.[a-z]{2,}$"
-                           placeholder="yourname@university.edu">
-                </div>
+                <form id="login-form" class="login-form">
+                    <div class="form-group">
+                        <label for="email">University Email</label>
+                        <input type="email" id="email" name="email" 
+                            placeholder="yourname@university.edu" required>
+                    </div>
 
-                <div class="form-group">
-                    <label for="password">Password</label>
-                    <div class="password-input">
-                        <input type="password" id="password" name="password" required
-                               minlength="8" placeholder="Enter your password">
-                        <button type="button" class="toggle-password" aria-label="Toggle password visibility">👁️</button>
+                    <div class="form-group">
+                        <label for="password">Password</label>
+                        <div class="password-input">
+                            <input type="password" id="password" name="password" 
+                                placeholder="Enter your password" required>
+                            <button type="button" class="toggle-password" aria-label="Toggle password visibility">
+                                👁️
+                            </button>
+                        </div>
+                    </div>
+
+                    <div class="form-options">
+                        <label class="remember-me">
+                            <input type="checkbox" name="remember" id="remember">
+                            <span>Remember me</span>
+                        </label>
+                        <a href="#" class="forgot-password">Forgot Password?</a>
+                    </div>
+
+                    <button type="submit" class="sign-in-btn">Sign in</button>
+                </form>
+
+                <div class="demo-section">
+                    <h2>Quick Demo Access</h2>
+                    <p>Select a profile to try out CampusConnect:</p>
+                    
+                    <div class="demo-profiles">
+                        <button class="demo-profile" data-role="student">
+                            <img src="https://avatar.iran.liara.run/public/job/teacher/female" alt="Student avatar" class="profile-avatar">
+                            <span>Student</span>
+                        </button>
+                        <button class="demo-profile" data-role="leader">
+                            <img src="https://avatar.iran.liara.run/public/job/lawyer/male" alt="Club leader avatar" class="profile-avatar">
+                            <span>Club Leader</span>
+                        </button>
+                        <button class="demo-profile" data-role="organizer">
+                            <img src="https://avatar.iran.liara.run/public/job/operator/female" alt="Event organizer avatar" class="profile-avatar">
+                            <span>Event Organizer</span>
+                        </button>
                     </div>
                 </div>
 
-                <div class="form-options">
-                    <label class="remember-me">
-                        <input type="checkbox" name="remember">
-                        Remember me
-                    </label>
-                    <a href="#" class="forgot-password">Forgot Password?</a>
-                </div>
-
-                <button type="submit" class="login-button">Sign In</button>
-            </form>
-
-            <div class="demo-profiles">
-                <h3>Quick Demo Access</h3>
-                <p>Select a profile to try out CampusConnect:</p>
-                <div class="profile-grid">
-                    <button class="demo-profile" data-profile="student">
-                        <img src="images/default-avatar.png" alt="Student avatar">
-                        <span>Student</span>
-                    </button>
-                    <button class="demo-profile" data-profile="club-leader">
-                        <img src="images/default-avatar.png" alt="Club leader avatar">
-                        <span>Club Leader</span>
-                    </button>
-                    <button class="demo-profile" data-profile="event-organizer">
-                        <img src="images/default-avatar.png" alt="Event organizer avatar">
-                        <span>Event Organizer</span>
-                    </button>
+                <div class="create-account">
+                    <p>New to CampusConnect? <a href="#">Create an account</a></p>
                 </div>
             </div>
-
-            <div class="signup-prompt">
-                <p>New to CampusConnect? <a href="#">Create an account</a></p>
-            </div>
-        </section>
+        </div>
     </main>
 
     <footer>
@@ -115,6 +119,6 @@
     </footer>
 
     <script src="js/theme.js"></script>
-    <script src="js/login.js"></script>
+    <script type="module" src="js/login.js"></script>
 </body>
 </html>

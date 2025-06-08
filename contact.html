@@ -21,13 +21,26 @@
                 <li><a href="faq.html">FAQ</a></li>
                 <li>
                     <button id="theme-toggle" class="theme-toggle" aria-label="Toggle dark mode">
-                        🌞
+                        🌛
                     </button>
                 </li>
             </ul>
-            <div class="user-actions">
-                <a href="profile.html" class="profile-link">My Profile</a>
-                <a href="login.html" class="login-btn">Login</a>
+            <div class="user-actions" id="logged-out-view">
+                <a href="login.html" class="login">Login</a>
+            </div>
+            <div class="user-actions" id="logged-in-view" style="display: none;">
+                <div class="user-menu">
+                    <button class="profile-trigger">
+                        <img src="https://avatar.iran.liara.run/public/job/designer/male" alt="User avatar" class="header-avatar">
+                        <span class="username">John Doe</span>
+                        <span class="dropdown-arrow">▼</span>
+                    </button>
+                    <div class="dropdown-menu">
+                        <a href="profile.html">My Profile</a>
+                        <a href="settings.html">Settings</a>
+                        <button id="logout-btn" class="logout-btn">Logout</button>
+                    </div>
+                </div>
             </div>
         </nav>
     </header>
@@ -171,6 +184,7 @@
     </footer>
 
     <script src="js/theme.js"></script>
-    <script src="js/contact.js"></script>
+    <script type="module" src="js/contact.js"></script>
+
 </body>
 </html>

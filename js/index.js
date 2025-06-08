@@ -203,64 +203,81 @@ function setupEventListeners() {
 
 function loadPosts() {
     const posts = JSON.parse(localStorage.getItem('posts')) || DEFAULT_POSTS;
-    let userData = null;
+    
     try {
         const userDataStr = Cookies.get('userData');
-        userData = userDataStr ? JSON.parse(userDataStr) : null;
-    } catch (e) {
-        console.error('Error parsing user data:', e);
-        return;
-    }
+        if (!userDataStr) {
+            throw new Error('No user data found');
+        }
 
-    if (!postsFeed || !userData) return;
-    
-    postsFeed.innerHTML = posts.map(post => `
-        <article class="post" data-post-id="${post.id}">
-            <div class="post-header">
-                <img src="${post.avatar}" alt="${post.author}'s avatar" class="avatar">
-                <div class="post-meta">
-                    <h3>${post.author}</h3>
-                    <span class="timestamp">${formatTimestamp(post.timestamp)}</span>
+        // Handle both string and object userData
+        let userData = userDataStr;
+        if (typeof userDataStr === 'string' && userDataStr.startsWith('{')) {
+            try {
+                userData = JSON.parse(userDataStr);
+            } catch (e) {
+                console.error('Error parsing userData:', e);
+                return;
+            }
+        }
+
+        if (!userData || !userData.id) {
+            throw new Error('Invalid user data');
+        }
+
+        if (!postsFeed) return;
+        
+        postsFeed.innerHTML = posts.map(post => `
+            <article class="post" data-post-id="${post.id}">
+                <div class="post-header">
+                    <img src="${post.avatar}" alt="${post.author}'s avatar" class="avatar">
+                    <div class="post-meta">
+                        <h3>${post.author}</h3>
+                        <span class="timestamp">${formatTimestamp(post.timestamp)}</span>
+                    </div>
                 </div>
-            </div>
-            <p class="post-content">${post.content}</p>
-            <div class="post-actions">
-                <button class="like-btn ${post.likedBy.includes(userData.id) ? 'active' : ''}" data-post-id="${post.id}">
-                    ${post.likedBy.includes(userData.id) ? '❤️' : '👍'} ${post.likes} ${post.likes === 1 ? 'Like' : 'Likes'}
-                </button>
-                <button class="comment-btn" data-post-id="${post.id}">
-                    💬 ${post.comments.length} Comments
-                </button>
-                <button class="share-btn" data-post-id="${post.id}" title="Share this post">
-                    📤 Share
-                </button>
-            </div>
-            <div class="comments-section" style="display: none;">
-                <div class="comment-input">
-                    <textarea placeholder="Write a comment..." rows="2"></textarea>
-                    <button class="submit-comment" data-post-id="${post.id}">Post Comment</button>
+                <p class="post-content">${post.content}</p>
+                <div class="post-actions">
+                    <button class="like-btn ${post.likedBy.includes(userData.id) ? 'active' : ''}" data-post-id="${post.id}">
+                        ${post.likedBy.includes(userData.id) ? '❤️' : '👍'} ${post.likes} ${post.likes === 1 ? 'Like' : 'Likes'}
+                    </button>
+                    <button class="comment-btn" data-post-id="${post.id}">
+                        💬 ${post.comments.length} Comments
+                    </button>
+                    <button class="share-btn" data-post-id="${post.id}" title="Share this post">
+                        📤 Share
+                    </button>
                 </div>
-                <div class="comments-list">
-                    ${post.comments.map(comment => `
-                        <div class="comment" data-comment-id="${comment.id}">
-                            <div class="comment-header">
-                                <div class="comment-author">
-                                    <strong>${comment.author}</strong>
-                                    <span class="timestamp">${formatTimestamp(comment.timestamp)}</span>
+                <div class="comments-section" style="display: none;">
+                    <div class="comment-input">
+                        <textarea placeholder="Write a comment..." rows="2"></textarea>
+                        <button class="submit-comment" data-post-id="${post.id}">Post Comment</button>
+                    </div>
+                    <div class="comments-list">
+                        ${post.comments.map(comment => `
+                            <div class="comment" data-comment-id="${comment.id}">
+                                <div class="comment-header">
+                                    <div class="comment-author">
+                                        <strong>${comment.author}</strong>
+                                        <span class="timestamp">${formatTimestamp(comment.timestamp)}</span>
+                                    </div>
                                 </div>
+                                <p>${comment.content}</p>
+                                <button class="like-btn small ${comment.likedBy.includes(userData.id) ? 'active' : ''}" 
+                                        data-post-id="${post.id}" 
+                                        data-comment-id="${comment.id}">
+                                    ${comment.likedBy.includes(userData.id) ? '❤️' : '👍'} ${comment.likes}
+                                </button>
                             </div>
-                            <p>${comment.content}</p>
-                            <button class="like-btn small ${comment.likedBy.includes(userData.id) ? 'active' : ''}" 
-                                    data-post-id="${post.id}" 
-                                    data-comment-id="${comment.id}">
-                                ${comment.likedBy.includes(userData.id) ? '❤️' : '👍'} ${comment.likes}
-                            </button>
-                        </div>
-                    `).join('')}
+                        `).join('')}
+                    </div>
                 </div>
-            </div>
-        </article>
-    `).join('');
+            </article>
+        `).join('');
+    } catch (e) {
+        console.error('Error in loadPosts:', e);
+        showMessage('Failed to load posts. Please refresh the page.', 'error');
+    }
 }
 
 function handlePostSubmit(event) {

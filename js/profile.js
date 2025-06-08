@@ -376,47 +376,103 @@ function setRandomCoverPhoto() {
 }
 
 function loadUserContent() {
-    const userData = JSON.parse(Cookies.get('userData'));
-    if (!userData || !userData.id) return;
+    try {
+        const userDataStr = Cookies.get('userData');
+        if (!userDataStr) {
+            throw new Error('No user data found');
+        }
 
-    const { posts, comments } = getUserContent(userData.id);
-    
-    // Render user's posts
-    if (userPostsContainer) {
-        userPostsContainer.innerHTML = `
-            <h3>Your Posts</h3>
-            ${posts.length ? posts.map(post => `
-                <div class="user-post">
-                    <div class="post-header">
-                        <span class="timestamp">${formatTimestamp(post.timestamp)}</span>
-                    </div>
-                    <p class="post-content">${post.content}</p>
-                    <div class="post-stats">
-                        <span>👍 ${post.likes} likes</span>
-                        <span>💬 ${post.comments.length} comments</span>
-                    </div>
-                </div>
-            `).join('') : '<p>No posts yet</p>'}
-        `;
-    }
+        // Handle both string and object userData
+        let userData = userDataStr;
+        if (typeof userDataStr === 'string' && userDataStr.startsWith('{')) {
+            try {
+                userData = JSON.parse(userDataStr);
+            } catch (e) {
+                console.error('Error parsing userData:', e);
+                return;
+            }
+        }
 
-    // Render user's comments
-    if (userCommentsContainer) {
-        userCommentsContainer.innerHTML = `
-            <h3>Your Comments</h3>
-            ${comments.length ? comments.map(comment => `
-                <div class="user-comment">
-                    <div class="comment-header">
-                        <small>Commented on ${postAuthor}'s post:</small>
-                        <span class="timestamp">${formatTimestamp(comment.timestamp)}</span>
-                    </div>
-                    <p class="post-preview">${comment.postContent}</p>
-                    <p class="comment-content">${comment.content}</p>
-                    <div class="comment-stats">
-                        <span>👍 ${comment.likes} likes</span>
-                    </div>
-                </div>
-            `).join('') : '<p>No comments yet</p>'}
-        `;
+        if (!userData || !userData.id) {
+            throw new Error('Invalid user data');
+        }
+
+        // Get all posts from localStorage
+        const allPosts = JSON.parse(localStorage.getItem('posts')) || [];
+        
+        // Filter posts by the current user's ID
+        const userPosts = allPosts.filter(post => post.authorId === userData.id);
+        
+        // Get comments where the user is the author
+        const userComments = allPosts.flatMap(post => 
+            post.comments
+                .filter(comment => comment.authorId === userData.id)
+                .map(comment => ({
+                    ...comment,
+                    postContent: post.content.substring(0, 100) + '...',
+                    postAuthor: post.author
+                }))
+        );
+
+        // Render user's posts
+        if (userPostsContainer) {
+            if (userPosts.length === 0) {
+                userPostsContainer.innerHTML = `
+                    <h3>Your Posts</h3>
+                    <p class="no-content">You haven't made any posts yet. Share your thoughts with the community!</p>
+                `;
+            } else {
+                userPostsContainer.innerHTML = `
+                    <h3>Your Posts (${userPosts.length})</h3>
+                    ${userPosts.map(post => `
+                        <div class="user-post">
+                            <div class="post-header">
+                                <span class="timestamp">${formatTimestamp(post.timestamp)}</span>
+                                <div class="post-stats">
+                                    <span>👍 ${post.likes} likes</span>
+                                    <span>💬 ${post.comments.length} comments</span>
+                                </div>
+                            </div>
+                            <p class="post-content">${post.content}</p>
+                        </div>
+                    `).join('')}
+                `;
+            }
+        }
+
+        // Render user's comments
+        if (userCommentsContainer) {
+            if (userComments.length === 0) {
+                userCommentsContainer.innerHTML = `
+                    <h3>Your Comments</h3>
+                    <p class="no-content">You haven't commented on any posts yet. Join the conversation!</p>
+                `;
+            } else {
+                userCommentsContainer.innerHTML = `
+                    <h3>Your Comments (${userComments.length})</h3>
+                    ${userComments.map(comment => `
+                        <div class="user-comment">
+                            <div class="comment-header">
+                                <small>You commented on ${comment.postAuthor}'s post:</small>
+                                <span class="timestamp">${formatTimestamp(comment.timestamp)}</span>
+                            </div>
+                            <p class="post-preview">${comment.postContent}</p>
+                            <p class="comment-content">${comment.content}</p>
+                            <div class="comment-stats">
+                                <span>👍 ${comment.likes} likes</span>
+                            </div>
+                        </div>
+                    `).join('')}
+                `;
+            }
+        }
+    } catch (error) {
+        console.error('Error loading user content:', error);
+        if (userPostsContainer) {
+            userPostsContainer.innerHTML = '<p class="error">Failed to load your posts. Please refresh the page.</p>';
+        }
+        if (userCommentsContainer) {
+            userCommentsContainer.innerHTML = '<p class="error">Failed to load your comments. Please refresh the page.</p>';
+        }
     }
 } 

@@ -1,16 +1,35 @@
 import { fetchMultipleCategories, createImageElement } from './unsplashFetcher.js';
 import { groups, CATEGORIES } from './groupsData.js';
 import { isLoggedIn, joinGroup, leaveGroup, isMemberOfGroup } from './auth.js';
+import { initializeHeader } from './utils/header.js';
+import Cookies from './utils/cookies.js';
 
 // Add debug logging
 console.log('Module loaded');
 console.log('Groups loaded:', groups);
 console.log('Categories loaded:', CATEGORIES);
 
+document.addEventListener('DOMContentLoaded', () => {
+    const isLoggedIn = Cookies.get('isLoggedIn') === 'true';
+    const userData = Cookies.get('userData');
+    console.log(isLoggedIn, userData);
+    if (!isLoggedIn || !userData) {
+        const loggedInView = document.getElementById('logged-in-view');
+        const loggedOutView = document.getElementById('logged-out-view');
+        if (loggedInView) loggedInView.style.display = 'block';
+        if (loggedOutView) loggedOutView.style.display = 'none';
+    }
+    
+});
+
 // Theme Persistence
 document.addEventListener('DOMContentLoaded', async () => {
     console.log('DOM Content Loaded');
     try {
+        // Initialize header
+        initializeHeader();
+        console.log('Header initialized');
+
         const container = document.querySelector('.groups-grid');
         if (!container) {
             throw new Error('Could not find groups-grid container');
@@ -94,8 +113,8 @@ function createGroupCard(group) {
     card.dataset.groupId = group.id;
     
     const isMember = isMemberOfGroup(group.id);
-    const isUserLoggedIn = isLoggedIn();
-    
+    const isUserLoggedIn = Cookies.get('isLoggedIn')
+    console.log(isUserLoggedIn);
     card.innerHTML = `
         <div class="group-banner">
             <div class="image-placeholder"></div>

@@ -94,8 +94,20 @@ function handleLogin(userData, remember = false) {
     // Set cookie expiration based on "remember me" option
     const expirationDays = remember ? 30 : 1;
     
+    // Add default profile fields
+    const completeUserData = {
+        ...userData,
+        bio: 'Click to add a bio',
+        major: 'Click to add your major',
+        year: 'Click to add your year',
+        interests: [],
+        isPublic: false,
+        showEmail: false,
+        coverPhoto: null
+    };
+    
     // Store user data in cookies
-    Cookies.set('userData', userData, expirationDays);
+    Cookies.set('userData', completeUserData, expirationDays);
     Cookies.set('isLoggedIn', true, expirationDays);
     
     // Redirect to home page

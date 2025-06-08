@@ -1,4 +1,6 @@
 import Cookies from './utils/cookies.js';
+import { checkAuth } from './utils/auth.js';
+import { getUserContent, formatTimestamp } from './data/posts.js';
 
 // DOM Elements
 const profileAvatar = document.querySelector('.profile-avatar');
@@ -13,6 +15,8 @@ const yearText = document.querySelector('.year-text');
 const interestsTags = document.querySelector('.interests-tags');
 const settingsForm = document.getElementById('profile-settings-form');
 const profileCover = document.querySelector('.profile-cover');
+const userPostsContainer = document.querySelector('.user-posts');
+const userCommentsContainer = document.querySelector('.user-comments');
 
 // Cover photo options with specific Unsplash photos
 const coverPhotoOptions = [
@@ -55,20 +59,17 @@ document.addEventListener('DOMContentLoaded', () => {
     initializeProfile();
     setupEventListeners();
     initializeCoverPhoto();
+    loadUserContent();
 });
 
 function initializeProfile() {
     const userDataStr = Cookies.get('userData');
-    const isLoggedIn = Cookies.get('isLoggedIn');
-
-    if (!isLoggedIn || !userDataStr) {
-        window.location.href = 'login.html';
-        return;
+    let userData = {};
+    try {
+        userData = JSON.parse(userDataStr);
+    } catch (e) {
+        userData = userDataStr; // If it's already an object
     }
-
-    // Parse the userData
-    let userData= JSON.parse(userDataStr);
-
 
     // Set default values if they don't exist
     const defaultData = {
@@ -157,6 +158,15 @@ function setupEventListeners() {
     privacyToggles.forEach(toggle => {
         toggle.addEventListener('change', handlePrivacyChange);
     });
+
+    const logoutBtn = document.getElementById('logout-btn');
+    logoutBtn.addEventListener('click', handleLogout);
+}
+
+function handleLogout() {
+    Cookies.delete('isLoggedIn');
+    Cookies.delete('userData');
+    window.location.href = 'index.html';
 }
 
 function switchTab(tabId) {
@@ -363,4 +373,50 @@ function testImageUrl(url) {
 function setRandomCoverPhoto() {
     const randomOption = coverPhotoOptions[Math.floor(Math.random() * coverPhotoOptions.length)];
     const photoUrl = getUnsplashUrl(randomOption.id);
+}
+
+function loadUserContent() {
+    const userData = JSON.parse(Cookies.get('userData'));
+    if (!userData || !userData.id) return;
+
+    const { posts, comments } = getUserContent(userData.id);
+    
+    // Render user's posts
+    if (userPostsContainer) {
+        userPostsContainer.innerHTML = `
+            <h3>Your Posts</h3>
+            ${posts.length ? posts.map(post => `
+                <div class="user-post">
+                    <div class="post-header">
+                        <span class="timestamp">${formatTimestamp(post.timestamp)}</span>
+                    </div>
+                    <p class="post-content">${post.content}</p>
+                    <div class="post-stats">
+                        <span>👍 ${post.likes} likes</span>
+                        <span>💬 ${post.comments.length} comments</span>
+                    </div>
+                </div>
+            `).join('') : '<p>No posts yet</p>'}
+        `;
+    }
+
+    // Render user's comments
+    if (userCommentsContainer) {
+        userCommentsContainer.innerHTML = `
+            <h3>Your Comments</h3>
+            ${comments.length ? comments.map(comment => `
+                <div class="user-comment">
+                    <div class="comment-header">
+                        <small>Commented on ${postAuthor}'s post:</small>
+                        <span class="timestamp">${formatTimestamp(comment.timestamp)}</span>
+                    </div>
+                    <p class="post-preview">${comment.postContent}</p>
+                    <p class="comment-content">${comment.content}</p>
+                    <div class="comment-stats">
+                        <span>👍 ${comment.likes} likes</span>
+                    </div>
+                </div>
+            `).join('') : '<p>No comments yet</p>'}
+        `;
+    }
 } 

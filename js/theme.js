@@ -8,13 +8,13 @@ const THEMES = {
     DARK: 'dark'
 };
 
-// Check for saved theme preference, otherwise use system preference
+// Check for saved theme preference, otherwise default to dark mode
 const getPreferredTheme = () => {
     const savedTheme = localStorage.getItem(THEME_STORAGE_KEY);
     if (savedTheme) {
         return savedTheme;
     }
-    return window.matchMedia('(prefers-color-scheme: dark)').matches ? THEMES.DARK : THEMES.LIGHT;
+    return THEMES.DARK; // Default to dark mode
 };
 
 // Apply theme
@@ -22,13 +22,15 @@ const setTheme = (theme) => {
     document.documentElement.setAttribute('data-theme', theme);
     localStorage.setItem(THEME_STORAGE_KEY, theme);
     
-    // Update icons
-    if (theme === THEMES.DARK) {
-        lightModeIcon.style.display = 'none';
-        darkModeIcon.style.display = 'block';
-    } else {
-        lightModeIcon.style.display = 'block';
-        darkModeIcon.style.display = 'none';
+    // Update icons if they exist
+    if (lightModeIcon && darkModeIcon) {
+        if (theme === THEMES.DARK) {
+            lightModeIcon.style.display = 'none';
+            darkModeIcon.style.display = 'block';
+        } else {
+            lightModeIcon.style.display = 'block';
+            darkModeIcon.style.display = 'none';
+        }
     }
 };
 
@@ -36,7 +38,7 @@ const setTheme = (theme) => {
 setTheme(getPreferredTheme());
 
 // Theme toggle click handler
-themeToggle.addEventListener('click', () => {
+themeToggle?.addEventListener('click', () => {
     const currentTheme = document.documentElement.getAttribute('data-theme');
     setTheme(currentTheme === THEMES.DARK ? THEMES.LIGHT : THEMES.DARK);
 });
@@ -44,48 +46,60 @@ themeToggle.addEventListener('click', () => {
 // Handle system theme changes
 window.matchMedia('(prefers-color-scheme: dark)').addEventListener('change', (e) => {
     if (!localStorage.getItem(THEME_STORAGE_KEY)) {
-        setTheme(e.matches ? THEMES.DARK : THEMES.LIGHT);
+        setTheme(THEMES.DARK); // Default to dark mode instead of system preference
     }
 });
 
-// Function to clear all cookies except theme
-const clearCookiesExceptTheme = () => {
-    const cookies = document.cookie.split(';');
-    const themePreference = localStorage.getItem(THEME_STORAGE_KEY);
-    
-    for (let cookie of cookies) {
-        const cookieName = cookie.split('=')[0].trim();
-        document.cookie = `${cookieName}=; expires=Thu, 01 Jan 1970 00:00:00 GMT; path=/`;
-    }
-    
-    // Restore theme preference
-    if (themePreference) {
-        localStorage.setItem(THEME_STORAGE_KEY, themePreference);
-    }
-};
-
 // Dropdown menu handling
-document.addEventListener('DOMContentLoaded', () => {
+const initializeDropdownMenu = () => {
     const userMenu = document.querySelector('.user-menu');
     const profileTrigger = document.querySelector('.profile-trigger');
+    const dropdownMenu = document.querySelector('.dropdown-menu');
 
-    // Toggle dropdown
-    profileTrigger?.addEventListener('click', (e) => {
-        e.stopPropagation();
-        userMenu.classList.toggle('active');
-    });
+    if (profileTrigger && userMenu && dropdownMenu) {
+        // Toggle dropdown
+        profileTrigger.addEventListener('click', (e) => {
+            e.stopPropagation();
+            userMenu.classList.toggle('active');
+            
+            // Update dropdown visibility
+            if (userMenu.classList.contains('active')) {
+                dropdownMenu.style.display = 'block';
+                setTimeout(() => {
+                    dropdownMenu.style.opacity = '1';
+                    dropdownMenu.style.transform = 'translateY(0)';
+                }, 10);
+            } else {
+                dropdownMenu.style.opacity = '0';
+                dropdownMenu.style.transform = 'translateY(-10px)';
+                setTimeout(() => {
+                    dropdownMenu.style.display = 'none';
+                }, 200);
+            }
+        });
 
-    // Close dropdown when clicking outside
-    document.addEventListener('click', (e) => {
-        if (!userMenu?.contains(e.target)) {
-            userMenu?.classList.remove('active');
-        }
-    });
+        // Close dropdown when clicking outside
+        document.addEventListener('click', (e) => {
+            if (!userMenu.contains(e.target)) {
+                userMenu.classList.remove('active');
+                dropdownMenu.style.opacity = '0';
+                dropdownMenu.style.transform = 'translateY(-10px)';
+                setTimeout(() => {
+                    dropdownMenu.style.display = 'none';
+                }, 200);
+            }
+        });
+    }
 
     // Handle logout
     const logoutBtn = document.getElementById('logout-btn');
     logoutBtn?.addEventListener('click', () => {
-        clearCookiesExceptTheme();
+        // Clear user data
+        localStorage.removeItem(THEME_STORAGE_KEY);
+        // Redirect to login
         window.location.href = 'login.html';
     });
-}); 
+};
+
+// Initialize dropdown menu when DOM is loaded
+document.addEventListener('DOMContentLoaded', initializeDropdownMenu); 

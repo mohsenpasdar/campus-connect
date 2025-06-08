@@ -58,13 +58,17 @@ document.addEventListener('DOMContentLoaded', () => {
 });
 
 function initializeProfile() {
-    const userData = Cookies.get('userData');
+    const userDataStr = Cookies.get('userData');
     const isLoggedIn = Cookies.get('isLoggedIn');
 
-    if (!isLoggedIn || !userData) {
+    if (!isLoggedIn || !userDataStr) {
         window.location.href = 'login.html';
         return;
     }
+
+    // Parse the userData
+    let userData= JSON.parse(userDataStr);
+
 
     // Set default values if they don't exist
     const defaultData = {
@@ -74,21 +78,21 @@ function initializeProfile() {
         interests: [],
         isPublic: false,
         showEmail: false,
-        coverPhoto: null
+        coverPhoto: "null"
     };
 
     // Merge default data with existing userData
     const updatedUserData = {
-        ...userData,
         ...defaultData,
-        ...userData.profile // If profile data exists, it will override defaults
+        ...userData,
+        ...(userData.profile || {}) // If profile data exists, it will override defaults
     };
 
     // Remove separate profile property if it exists
     delete updatedUserData.profile;
 
     // Update cookie with merged data
-    Cookies.set('userData', updatedUserData, 30);
+    Cookies.set('userData', JSON.stringify(updatedUserData), 30);
 
     // Update UI with all profile information
     updateProfileInfo(updatedUserData);
@@ -193,60 +197,70 @@ function handleEdit(event) {
     input.focus();
 
     const saveChanges = () => {
-        let newText = input.value.trim();
-        const userData = Cookies.get('userData');
-
-        if (!userData) {
-            console.error('No user data found');
-            return;
-        }
-
-        // If empty, use default text
-        if (!newText) {
-            newText = fieldType === 'bio' ? 'Click to add a bio' : `Click to add your ${fieldType}`;
-        }
-
-        // Update the UI
-        const newElement = textElement.cloneNode(true);
-        
-        // Handle different field types
-        switch(fieldType) {
-            case 'interests':
-                const interests = newText.split(',').map(i => i.trim()).filter(i => i);
-                userData.interests = interests;
-                newElement.innerHTML = interests.map(interest => `<span class="tag">${interest}</span>`).join('');
-                break;
-            case 'major':
-                userData.major = newText;
-                newElement.textContent = newText;
-                break;
-            case 'year':
-                userData.year = newText;
-                newElement.textContent = newText;
-                break;
-            default: // bio
-                userData.bio = newText;
-                newElement.textContent = newText;
-        }
-
-        input.replaceWith(newElement);
-
-        // Save to cookie and show success message
         try {
-            Cookies.set('userData', userData, 30);
-            showMessage('Changes saved successfully!');
-        } catch (error) {
-            console.error('Error saving data:', error);
-            showMessage('Error saving changes', 'error');
-        }
+            // Get fresh copy of userData and parse it
+            const userDataStr = Cookies.get('userData');
+            if (!userDataStr) {
+                throw new Error('No user data found');
+            }
+            
+            let userData = JSON.parse(userDataStr);
 
-        // Reset buttons
-        editBtn.style.display = 'inline-block';
-        saveBtn.style.display = 'none';
+            let newText = input.value.trim();
+            // Create new element for UI update
+            const newElement = textElement.cloneNode(true);
+            // Update userData based on field type
+            switch(newElement.classList[0].split('-')[0]) {
+                case 'interests':
+                    const interests = newText.split(',').map(i => i.trim()).filter(i => i);
+                    userData.interests = interests;
+                    newElement.innerHTML = interests.map(interest => `<span class="tag">${interest}</span>`).join('');
+                    break;
+                case 'major':
+                    userData.major = newText;
+                    newElement.textContent = newText;
+                    break;
+                case 'year':
+                    userData.year = newText;
+                    newElement.textContent = newText;
+                    break;
+                default: // bio
+                    userData.bio = newText;
+                    newElement.textContent = newText;
+            }
+
+            console.log('Saving userData:', userData); // Debug log
+            
+            // Save to cookie
+            Cookies.set('userData', JSON.stringify(userData), 30);
+
+            // Update UI
+            input.replaceWith(newElement);
+            showMessage('Changes saved successfully!');
+
+            // Reset buttons
+            editBtn.style.display = 'inline-block';
+            saveBtn.style.display = 'none';
+
+        } catch (error) {
+            console.error('Error saving changes:', error);
+            showMessage('Error saving changes', 'error');
+            
+            // Reset UI on error
+            input.replaceWith(textElement);
+            editBtn.style.display = 'inline-block';
+            saveBtn.style.display = 'none';
+        }
     };
 
     // Save button click handler
-    saveBtn.addEventListener('click', saveChanges);
+    const saveHandler = (e) => {
+        e.preventDefault();
+        e.stopPropagation();
+        saveChanges();
+    };
+
+    saveBtn.addEventListener('click', saveHandler, { once: true });
 
     // Cancel on escape key
     input.addEventListener('keydown', (e) => {
@@ -286,10 +300,17 @@ function handleSettingsSubmit(event) {
 }
 
 function handlePrivacyChange(event) {
-    const userData = Cookies.get('userData');
+    const userDataStr = Cookies.get('userData');
+    let userData;
+    try {
+        userData = JSON.parse(userDataStr);
+    } catch (e) {
+        userData = userDataStr; // If it's already an object
+    }
+    
     const setting = event.target.id === 'profile-visibility' ? 'isPublic' : 'showEmail';
     userData[setting] = event.target.checked;
-    Cookies.set('userData', userData, 30);
+    Cookies.set('userData', JSON.stringify(userData), 30);
 }
 
 function showMessage(message, type = 'success') {
@@ -342,27 +363,4 @@ function testImageUrl(url) {
 function setRandomCoverPhoto() {
     const randomOption = coverPhotoOptions[Math.floor(Math.random() * coverPhotoOptions.length)];
     const photoUrl = getUnsplashUrl(randomOption.id);
-    
-    testImageUrl(photoUrl)
-        .then(isValid => {
-            const finalUrl = isValid ? photoUrl : DEFAULT_COVER;
-            if (profileCover) {
-                profileCover.style.backgroundImage = `url(${finalUrl})`;
-                
-                // Save the URL in cookies
-                const userData = Cookies.get('userData');
-                userData.coverPhoto = finalUrl;
-                Cookies.set('userData', userData, 30);
-            }
-        })
-        .catch(() => {
-            // Use default cover if there's any error
-            if (profileCover) {
-                profileCover.style.backgroundImage = `url(${DEFAULT_COVER})`;
-                
-                const userData = Cookies.get('userData');
-                userData.coverPhoto = DEFAULT_COVER;
-                Cookies.set('userData', userData, 30);
-            }
-        });
 } 

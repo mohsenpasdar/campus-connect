@@ -1,55 +1,91 @@
 // Theme handling
 const themeToggle = document.getElementById('theme-toggle');
-const html = document.documentElement;
+const lightModeIcon = document.querySelector('.light-mode-icon');
+const darkModeIcon = document.querySelector('.dark-mode-icon');
 const THEME_STORAGE_KEY = 'campus-connect-theme';
 const THEMES = {
     LIGHT: 'light',
     DARK: 'dark'
 };
 
-// Initialize theme
-function initializeTheme() {
-    // Check for stored theme preference
-    const storedTheme = localStorage.getItem(THEME_STORAGE_KEY);
-    
-    if (storedTheme) {
-        applyTheme(storedTheme);
-    } else {
-        // Check system preference
-        const prefersDark = window.matchMedia('(prefers-color-scheme: dark)').matches;
-        applyTheme(prefersDark ? THEMES.DARK : THEMES.LIGHT);
+// Check for saved theme preference, otherwise use system preference
+const getPreferredTheme = () => {
+    const savedTheme = localStorage.getItem(THEME_STORAGE_KEY);
+    if (savedTheme) {
+        return savedTheme;
     }
-
-    // Listen for system theme changes
-    window.matchMedia('(prefers-color-scheme: dark)').addEventListener('change', e => {
-        if (!localStorage.getItem(THEME_STORAGE_KEY)) {
-            applyTheme(e.matches ? THEMES.DARK : THEMES.LIGHT);
-        }
-    });
-}
+    return window.matchMedia('(prefers-color-scheme: dark)').matches ? THEMES.DARK : THEMES.LIGHT;
+};
 
 // Apply theme
-function applyTheme(theme) {
-    html.setAttribute('data-theme', theme);
-    updateThemeToggleButton(theme);
+const setTheme = (theme) => {
+    document.documentElement.setAttribute('data-theme', theme);
     localStorage.setItem(THEME_STORAGE_KEY, theme);
-}
+    
+    // Update icons
+    if (theme === THEMES.DARK) {
+        lightModeIcon.style.display = 'none';
+        darkModeIcon.style.display = 'block';
+    } else {
+        lightModeIcon.style.display = 'block';
+        darkModeIcon.style.display = 'none';
+    }
+};
 
-// Update theme toggle button
-function updateThemeToggleButton(theme) {
-    themeToggle.innerHTML = theme === THEMES.DARK ? '🌜' : '🌞';
-    themeToggle.setAttribute('aria-label', `Switch to ${theme === THEMES.DARK ? 'light' : 'dark'} mode`);
-}
+// Initialize theme
+setTheme(getPreferredTheme());
 
-// Toggle theme
-function toggleTheme() {
-    const currentTheme = html.getAttribute('data-theme');
-    const newTheme = currentTheme === THEMES.DARK ? THEMES.LIGHT : THEMES.DARK;
-    applyTheme(newTheme);
-}
+// Theme toggle click handler
+themeToggle.addEventListener('click', () => {
+    const currentTheme = document.documentElement.getAttribute('data-theme');
+    setTheme(currentTheme === THEMES.DARK ? THEMES.LIGHT : THEMES.DARK);
+});
 
-// Event listeners
+// Handle system theme changes
+window.matchMedia('(prefers-color-scheme: dark)').addEventListener('change', (e) => {
+    if (!localStorage.getItem(THEME_STORAGE_KEY)) {
+        setTheme(e.matches ? THEMES.DARK : THEMES.LIGHT);
+    }
+});
+
+// Function to clear all cookies except theme
+const clearCookiesExceptTheme = () => {
+    const cookies = document.cookie.split(';');
+    const themePreference = localStorage.getItem(THEME_STORAGE_KEY);
+    
+    for (let cookie of cookies) {
+        const cookieName = cookie.split('=')[0].trim();
+        document.cookie = `${cookieName}=; expires=Thu, 01 Jan 1970 00:00:00 GMT; path=/`;
+    }
+    
+    // Restore theme preference
+    if (themePreference) {
+        localStorage.setItem(THEME_STORAGE_KEY, themePreference);
+    }
+};
+
+// Dropdown menu handling
 document.addEventListener('DOMContentLoaded', () => {
-    initializeTheme();
-    themeToggle.addEventListener('click', toggleTheme);
+    const userMenu = document.querySelector('.user-menu');
+    const profileTrigger = document.querySelector('.profile-trigger');
+
+    // Toggle dropdown
+    profileTrigger?.addEventListener('click', (e) => {
+        e.stopPropagation();
+        userMenu.classList.toggle('active');
+    });
+
+    // Close dropdown when clicking outside
+    document.addEventListener('click', (e) => {
+        if (!userMenu?.contains(e.target)) {
+            userMenu?.classList.remove('active');
+        }
+    });
+
+    // Handle logout
+    const logoutBtn = document.getElementById('logout-btn');
+    logoutBtn?.addEventListener('click', () => {
+        clearCookiesExceptTheme();
+        window.location.href = 'login.html';
+    });
 }); 

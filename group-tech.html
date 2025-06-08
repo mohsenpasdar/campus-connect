@@ -1,0 +1,245 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Tech Innovators - CampusConnect</title>
+    <link rel="stylesheet" href="css/theme.css">
+    <link rel="stylesheet" href="css/group-tech.css">
+</head>
+<body>
+    <header>
+        <nav class="main-nav">
+            <div class="logo">
+                <h1>CampusConnect</h1>
+            </div>
+            <ul class="nav-links">
+                <li><a href="index.html">Home</a></li>
+                <li><a href="groups.html">Groups</a></li>
+                <li><a href="about.html">About</a></li>
+                <li><a href="contact.html">Contact</a></li>
+                <li><a href="faq.html">FAQ</a></li>
+                <li>
+                    <button id="theme-toggle" class="theme-toggle" aria-label="Toggle dark mode">
+                        🌞
+                    </button>
+                </li>
+            </ul>
+            <div class="user-actions">
+                <a href="profile.html" class="profile-link">My Profile</a>
+                <a href="login.html" class="login-btn">Login</a>
+            </div>
+        </nav>
+    </header>
+
+    <main>
+        <div class="group-header">
+            <div class="group-banner">
+                <img src="images/tech-group.jpg" alt="Tech Innovators banner">
+            </div>
+            <div class="group-info">
+                <h1>Tech Innovators</h1>
+                <div class="group-meta">
+                    <span class="members">👥 156 members</span>
+                    <span class="category">💻 Technology</span>
+                    <span class="created">📅 Created Jan 2024</span>
+                </div>
+                <p class="group-description">
+                    A community of tech enthusiasts exploring the latest in technology and innovation. 
+                    Join us for workshops, hackathons, and discussions about emerging technologies.
+                </p>
+                <div class="group-actions">
+                    <button class="join-group">Join Group</button>
+                    <button class="share-group">Share Group</button>
+                </div>
+            </div>
+        </div>
+
+        <div class="group-content">
+            <div class="content-nav">
+                <button class="nav-item active" data-tab="discussions">Discussions</button>
+                <button class="nav-item" data-tab="events">Events</button>
+                <button class="nav-item" data-tab="resources">Resources</button>
+                <button class="nav-item" data-tab="members">Members</button>
+            </div>
+
+            <div class="tab-content">
+                <!-- Discussions Tab -->
+                <div id="discussions" class="tab-panel active">
+                    <div class="create-post">
+                        <textarea placeholder="Start a discussion..."></textarea>
+                        <button class="post-btn">Post</button>
+                    </div>
+
+                    <div class="discussions-list">
+                        <article class="discussion-post">
+                            <div class="post-header">
+                                <img src="images/avatar1.jpg" alt="User avatar" class="avatar">
+                                <div class="post-meta">
+                                    <h3>Sarah Chen</h3>
+                                    <span class="timestamp">2 hours ago</span>
+                                </div>
+                            </div>
+                            <p class="post-content">
+                                Hey everyone! I'm organizing a workshop on AI and Machine Learning basics
+                                this Saturday. Who's interested in joining? We'll cover fundamental concepts
+                                and do some hands-on exercises with Python.
+                            </p>
+                            <div class="post-actions">
+                                <button class="like-btn">👍 24</button>
+                                <button class="comment-btn">💬 12</button>
+                                <button class="share-btn">📤</button>
+                            </div>
+                        </article>
+
+                        <article class="discussion-post">
+                            <div class="post-header">
+                                <img src="images/avatar2.jpg" alt="User avatar" class="avatar">
+                                <div class="post-meta">
+                                    <h3>Alex Thompson</h3>
+                                    <span class="timestamp">5 hours ago</span>
+                                </div>
+                            </div>
+                            <p class="post-content">
+                                Just found this amazing resource for learning web development! Check out
+                                this roadmap: [link]. It covers everything from HTML/CSS basics to advanced
+                                React and Node.js concepts.
+                            </p>
+                            <div class="post-actions">
+                                <button class="like-btn">👍 18</button>
+                                <button class="comment-btn">💬 8</button>
+                                <button class="share-btn">📤</button>
+                            </div>
+                        </article>
+                    </div>
+                </div>
+
+                <!-- Events Tab -->
+                <div id="events" class="tab-panel">
+                    <div class="events-list">
+                        <article class="event-card">
+                            <div class="event-date">
+                                <span class="day">15</span>
+                                <span class="month">MAR</span>
+                            </div>
+                            <div class="event-details">
+                                <h3>Web Development Workshop</h3>
+                                <p>Learn modern web development techniques with React and Node.js</p>
+                                <div class="event-meta">
+                                    <span>🕒 2:00 PM - 5:00 PM</span>
+                                    <span>📍 Tech Lab 101</span>
+                                </div>
+                                <button class="rsvp-btn">RSVP</button>
+                            </div>
+                        </article>
+
+                        <article class="event-card">
+                            <div class="event-date">
+                                <span class="day">22</span>
+                                <span class="month">MAR</span>
+                            </div>
+                            <div class="event-details">
+                                <h3>Hackathon 2024</h3>
+                                <p>24-hour coding challenge with amazing prizes!</p>
+                                <div class="event-meta">
+                                    <span>🕒 9:00 AM - Next Day</span>
+                                    <span>📍 Innovation Center</span>
+                                </div>
+                                <button class="rsvp-btn">RSVP</button>
+                            </div>
+                        </article>
+                    </div>
+                </div>
+
+                <!-- Resources Tab -->
+                <div id="resources" class="tab-panel">
+                    <div class="resources-grid">
+                        <article class="resource-card">
+                            <div class="resource-icon">📚</div>
+                            <div class="resource-info">
+                                <h3>Learning Resources</h3>
+                                <p>Curated list of tutorials, courses, and documentation</p>
+                                <a href="#" class="resource-link">View Resources</a>
+                            </div>
+                        </article>
+
+                        <article class="resource-card">
+                            <div class="resource-icon">💻</div>
+                            <div class="resource-info">
+                                <h3>Code Repository</h3>
+                                <p>Group projects and code samples</p>
+                                <a href="#" class="resource-link">View Repository</a>
+                            </div>
+                        </article>
+
+                        <article class="resource-card">
+                            <div class="resource-icon">📝</div>
+                            <div class="resource-info">
+                                <h3>Study Materials</h3>
+                                <p>Notes, presentations, and practice problems</p>
+                                <a href="#" class="resource-link">View Materials</a>
+                            </div>
+                        </article>
+                    </div>
+                </div>
+
+                <!-- Members Tab -->
+                <div id="members" class="tab-panel">
+                    <div class="members-grid">
+                        <article class="member-card">
+                            <img src="images/avatar1.jpg" alt="Sarah Chen" class="member-avatar">
+                            <div class="member-info">
+                                <h3>Sarah Chen</h3>
+                                <span class="member-role">Admin</span>
+                                <p>AI/ML Enthusiast</p>
+                            </div>
+                        </article>
+
+                        <article class="member-card">
+                            <img src="images/avatar2.jpg" alt="Alex Thompson" class="member-avatar">
+                            <div class="member-info">
+                                <h3>Alex Thompson</h3>
+                                <span class="member-role">Moderator</span>
+                                <p>Full Stack Developer</p>
+                            </div>
+                        </article>
+
+                        <!-- More member cards... -->
+                    </div>
+                </div>
+            </div>
+        </div>
+    </main>
+
+    <footer>
+        <div class="footer-content">
+            <div class="footer-section">
+                <h4>About CampusConnect</h4>
+                <p>Connecting university students, one post at a time.</p>
+            </div>
+            <div class="footer-section">
+                <h4>Quick Links</h4>
+                <ul>
+                    <li><a href="about.html">About Us</a></li>
+                    <li><a href="contact.html">Contact</a></li>
+                    <li><a href="faq.html">FAQ</a></li>
+                </ul>
+            </div>
+            <div class="footer-section">
+                <h4>Connect With Us</h4>
+                <div class="social-links">
+                    <a href="#" aria-label="Facebook">📘</a>
+                    <a href="#" aria-label="Twitter">🐦</a>
+                    <a href="#" aria-label="Instagram">📸</a>
+                </div>
+            </div>
+        </div>
+        <div class="footer-bottom">
+            <p>&copy; 2024 CampusConnect. All rights reserved.</p>
+        </div>
+    </footer>
+
+    <script src="js/theme.js"></script>
+    <script src="js/group-tech.js"></script>
+</body>
+</html>

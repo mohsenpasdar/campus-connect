@@ -1,1 +1,130 @@
-Hello world!
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>CampusConnect - Your University Social Hub</title>
+    <link rel="stylesheet" href="css/theme.css">
+    <link rel="stylesheet" href="css/index.css">
+</head>
+<body>
+    <header>
+        <nav class="main-nav">
+            <div class="logo">
+                <h1>CampusConnect</h1>
+            </div>
+            <ul class="nav-links">
+                <li><a href="index.html" class="active">Home</a></li>
+                <li><a href="groups.html">Groups</a></li>
+                <li><a href="about.html">About</a></li>
+                <li><a href="contact.html">Contact</a></li>
+                <li><a href="faq.html">FAQ</a></li>
+                <li>
+                    <button id="theme-toggle" class="theme-toggle" aria-label="Toggle dark mode">
+                        🌞
+                    </button>
+                </li>
+            </ul>
+            <div class="user-actions">
+                <a href="profile.html" class="profile-link">My Profile</a>
+                <a href="login.html" class="login-btn">Login</a>
+            </div>
+        </nav>
+    </header>
+
+    <main>
+        <section class="create-post">
+            <h2>Create a Post</h2>
+            <form id="post-form">
+                <textarea placeholder="What's on your mind?" required></textarea>
+                <div class="post-actions">
+                    <input type="file" id="image-upload" accept="image/*">
+                    <label for="image-upload" class="upload-btn">Add Image</label>
+                    <button type="submit">Post</button>
+                </div>
+            </form>
+        </section>
+
+        <section class="feed-filters">
+            <input type="search" placeholder="Search posts..." id="post-search">
+            <select id="filter-groups">
+                <option value="">All Groups</option>
+                <option value="tech">Tech Club</option>
+                <option value="sports">Sports</option>
+                <option value="arts">Arts</option>
+            </select>
+        </section>
+
+        <section class="posts-feed">
+            <!-- Example posts - will be dynamic with JavaScript -->
+            <article class="post">
+                <div class="post-header">
+                    <img src="images/default-avatar.png" alt="User avatar" class="avatar">
+                    <div class="post-meta">
+                        <h3>John Doe</h3>
+                        <span class="timestamp">2 hours ago</span>
+                    </div>
+                </div>
+                <p class="post-content">
+                    Just finished my final project presentation! Thanks to everyone in the Tech Club for their support! 🎉
+                </p>
+                <div class="post-actions">
+                    <button class="like-btn">👍 Like</button>
+                    <button class="comment-btn">💬 Comment</button>
+                    <button class="share-btn">📤 Share</button>
+                </div>
+            </article>
+
+            <article class="post">
+                <div class="post-header">
+                    <img src="images/default-avatar.png" alt="User avatar" class="avatar">
+                    <div class="post-meta">
+                        <h3>Jane Smith</h3>
+                        <span class="timestamp">5 hours ago</span>
+                    </div>
+                </div>
+                <p class="post-content">
+                    Don't forget about the campus cleanup event this weekend! Let's make our university beautiful together! 🌱
+                </p>
+                <img src="images/campus-event.jpg" alt="Campus cleanup event poster" class="post-image">
+                <div class="post-actions">
+                    <button class="like-btn">👍 Like</button>
+                    <button class="comment-btn">💬 Comment</button>
+                    <button class="share-btn">📤 Share</button>
+                </div>
+            </article>
+        </section>
+    </main>
+
+    <footer>
+        <div class="footer-content">
+            <div class="footer-section">
+                <h4>About CampusConnect</h4>
+                <p>Connecting university students, one post at a time.</p>
+            </div>
+            <div class="footer-section">
+                <h4>Quick Links</h4>
+                <ul>
+                    <li><a href="about.html">About Us</a></li>
+                    <li><a href="contact.html">Contact</a></li>
+                    <li><a href="faq.html">FAQ</a></li>
+                </ul>
+            </div>
+            <div class="footer-section">
+                <h4>Connect With Us</h4>
+                <div class="social-links">
+                    <a href="#" aria-label="Facebook">📘</a>
+                    <a href="#" aria-label="Twitter">🐦</a>
+                    <a href="#" aria-label="Instagram">📸</a>
+                </div>
+            </div>
+        </div>
+        <div class="footer-bottom">
+            <p>&copy; 2024 CampusConnect. All rights reserved.</p>
+        </div>
+    </footer>
+
+    <script src="js/theme.js"></script>
+    <script src="js/index.js"></script>
+</body>
+</html>

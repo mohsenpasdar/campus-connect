@@ -1,0 +1,90 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Campus Groups - CampusConnect</title>
+    <link rel="stylesheet" href="css/theme.css">
+    <link rel="stylesheet" href="css/groups.css">
+    <link rel="stylesheet" href="css/unsplash-images.css">
+</head>
+<body>
+    <header>
+        <nav class="main-nav">
+            <div class="logo">
+                <h1>CampusConnect</h1>
+            </div>
+            <ul class="nav-links">
+                <li><a href="index.html">Home</a></li>
+                <li><a href="groups.html" class="active">Groups</a></li>
+                <li><a href="about.html">About</a></li>
+                <li><a href="contact.html">Contact</a></li>
+                <li><a href="faq.html">FAQ</a></li>
+                <li>
+                    <button id="theme-toggle" class="theme-toggle" aria-label="Toggle dark mode">
+                        🌛
+                    </button>
+                </li>
+            </ul>
+            <div class="user-actions">
+                <a href="profile.html" class="profile-link">My Profile</a>
+                <a href="login.html" class="login-btn">Login</a>
+            </div>
+        </nav>
+    </header>
+
+    <main>
+        <section class="groups-header">
+            <h2>Campus Groups</h2>
+            <div class="groups-actions">
+                <div class="search-filter">
+                    <input type="search" id="group-search" placeholder="Search groups...">
+                    <select id="category-filter">
+                        <option value="">All Categories</option>
+                    </select>
+                </div>
+                <button class="create-group-btn">Create New Group</button>
+            </div>
+        </section>
+
+        <section class="groups-grid">
+            <!-- Groups will be dynamically inserted here -->
+            <div class="loading-message">Loading groups...</div>
+        </section>
+    </main>
+
+    <footer>
+        <div class="footer-content">
+            <div class="footer-section">
+                <h4>About CampusConnect</h4>
+                <p>Connecting university students, one post at a time.</p>
+            </div>
+            <div class="footer-section">
+                <h4>Quick Links</h4>
+                <ul>
+                    <li><a href="about.html">About Us</a></li>
+                    <li><a href="contact.html">Contact</a></li>
+                    <li><a href="faq.html">FAQ</a></li>
+                </ul>
+            </div>
+            <div class="footer-section">
+                <h4>Connect With Us</h4>
+                <div class="social-links">
+                    <a href="#" aria-label="Facebook">📘</a>
+                    <a href="#" aria-label="Twitter">🐦</a>
+                    <a href="#" aria-label="Instagram">📸</a>
+                </div>
+            </div>
+        </div>
+        <div class="footer-bottom">
+            <p>&copy; 2024 CampusConnect. All rights reserved.</p>
+        </div>
+    </footer>
+
+    <!-- Load non-module scripts first -->
+    <script src="js/theme.js"></script>
+    
+    <!-- Load the main module script - it will handle importing the other modules -->
+    <script type="module" src="js/groups.js"></script>
+</body>
+</html>

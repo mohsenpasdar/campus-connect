@@ -31,42 +31,6 @@ export function initializeHeader() {
                 if (avatarElement && user.avatar) avatarElement.src = user.avatar;
             }
             if (myProfileLink) myProfileLink.style.display = 'block';
-
-            // Setup user menu functionality
-            if (profileTrigger && userMenu) {
-                // Remove any existing listeners first
-                const newProfileTrigger = profileTrigger.cloneNode(true);
-                profileTrigger.parentNode.replaceChild(newProfileTrigger, profileTrigger);
-                
-                // Toggle dropdown menu
-                newProfileTrigger.addEventListener('click', (e) => {
-                    e.stopPropagation();
-                    userMenu.classList.toggle('active');
-                });
-
-                // Close menu when clicking outside
-                const handleClickOutside = (e) => {
-                    if (!userMenu.contains(e.target) && !newProfileTrigger.contains(e.target)) {
-                        userMenu.classList.remove('active');
-                    }
-                };
-                document.removeEventListener('click', handleClickOutside);
-                document.addEventListener('click', handleClickOutside);
-
-                // Handle logout
-                const logoutBtn = userMenu.querySelector('#logout-btn');
-                if (logoutBtn) {
-                    // Remove any existing listeners first
-                    const newLogoutBtn = logoutBtn.cloneNode(true);
-                    logoutBtn.parentNode.replaceChild(newLogoutBtn, logoutBtn);
-                    
-                    newLogoutBtn.addEventListener('click', () => {
-                        Cookies.delete('isLoggedIn');
-                        Cookies.delete('userData');
-                        window.location.href = 'login.html';
-                    });
-                }
-            }
         } else {
             if (loginButton) loginButton.style.display = 'block';
             if (userActions) userActions.style.display = 'none';

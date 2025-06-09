@@ -1,0 +1,404 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>FAQ - CampusConnect</title>
+    <link rel="stylesheet" href="css/theme.css">
+    <link rel="stylesheet" href="css/faq.css">
+</head>
+<body>
+    <!-- Header will be loaded dynamically -->
+    <main>
+        <section class="faq-hero">
+            <div class="hero-content">
+                <h2>Frequently Asked Questions</h2>
+                <p>Find answers to common questions about CampusConnect</p>
+            </div>
+        </section>
+
+        <section class="faq-container">
+            <div class="faq-categories">
+                <button class="category-btn active" data-category="general">General</button>
+                <button class="category-btn" data-category="account">Account</button>
+                <button class="category-btn" data-category="groups">Groups</button>
+                <button class="category-btn" data-category="posts">Posts & Comments</button>
+                <button class="category-btn" data-category="technical">Technical</button>
+            </div>
+
+            <div class="faq-search">
+                <input type="search" id="faq-search" placeholder="Search FAQs...">
+            </div>
+
+            <div class="faq-list">
+                <!-- General Questions -->
+                <div class="faq-section" data-category="general">
+                    <h3>General Questions</h3>
+                    <div class="faq-item">
+                        <button class="faq-question">What is CampusConnect?</button>
+                        <div class="faq-answer">
+                            <div class="faq-answer-content">
+                                <p>CampusConnect is a dedicated social platform for university students that helps you:</p>
+                                <ul>
+                                    <li>Connect with classmates and form study groups</li>
+                                    <li>Join and manage campus clubs and organizations</li>
+                                    <li>Stay updated on campus events and activities</li>
+                                    <li>Share academic resources and collaborate on projects</li>
+                                    <li>Build your academic and professional network</li>
+                                </ul>
+                                <p>Unlike general social media platforms, CampusConnect is specifically designed for academic and professional networking within your university community.</p>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="faq-item">
+                        <button class="faq-question">Who can use CampusConnect?</button>
+                        <div class="faq-answer">
+                            <div class="faq-answer-content">
+                                <p>CampusConnect is available to:</p>
+                                <ul>
+                                    <li>Current university students (undergraduate and graduate)</li>
+                                    <li>Faculty members and instructors</li>
+                                    <li>University staff and administrators</li>
+                                    <li>Alumni (with limited features)</li>
+                                </ul>
+                                <p>To maintain the platform's academic focus, you'll need a valid university email address (@yorku.ca) to register and verify your account.</p>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="faq-item">
+                        <button class="faq-question">Is CampusConnect free to use?</button>
+                        <div class="faq-answer">
+                            <div class="faq-answer-content">
+                                <p>Yes! CampusConnect is completely free for all university members. There are no premium features or paid subscriptions. All core functionality is available to everyone with a verified university account.</p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Account Questions -->
+                <div class="faq-section" data-category="account">
+                    <h3>Account & Profile</h3>
+                    <div class="faq-item">
+                        <button class="faq-question">How do I create an account?</button>
+                        <div class="faq-answer">
+                            <div class="faq-answer-content">
+                                <p>Creating a CampusConnect account is easy:</p>
+                                <ol>
+                                    <li>Click the "Login" button in the top right</li>
+                                    <li>Select "Sign Up" on the login page</li>
+                                    <li>Enter your university email address (@yorku.ca)</li>
+                                    <li>Create a secure password</li>
+                                    <li>Fill in your basic profile information:
+                                        <ul>
+                                            <li>Full name</li>
+                                            <li>Major/Department</li>
+                                            <li>Year of study</li>
+                                            <li>Profile picture (optional)</li>
+                                        </ul>
+                                    </li>
+                                    <li>Verify your email address through the link we send you</li>
+                                </ol>
+                                <p>Once verified, you can start connecting with your university community!</p>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="faq-item">
+                        <button class="faq-question">How can I reset my password?</button>
+                        <div class="faq-answer">
+                            <div class="faq-answer-content">
+                                <p>To reset your password:</p>
+                                <ol>
+                                    <li>Click "Forgot Password" on the login page</li>
+                                    <li>Enter your university email address</li>
+                                    <li>Check your email for the reset link (including spam folder)</li>
+                                    <li>Click the link and create a new password</li>
+                                </ol>
+                                <p>The reset link expires after 24 hours for security. If you don't receive the email within a few minutes, you can request a new one.</p>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="faq-item">
+                        <button class="faq-question">How do I customize my profile?</button>
+                        <div class="faq-answer">
+                            <div class="faq-answer-content">
+                                <p>You can personalize your profile in several ways:</p>
+                                <ol>
+                                    <li>Click your profile picture in the top right</li>
+                                    <li>Select "My Profile"</li>
+                                    <li>Click "Edit Profile" to modify:
+                                        <ul>
+                                            <li>Profile picture and cover photo</li>
+                                            <li>Bio and interests</li>
+                                            <li>Academic information</li>
+                                            <li>Contact details</li>
+                                            <li>Privacy settings</li>
+                                        </ul>
+                                    </li>
+                                </ol>
+                                <p>Remember to keep your academic information up-to-date for better networking opportunities!</p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Groups Questions -->
+                <div class="faq-section" data-category="groups">
+                    <h3>Groups & Communities</h3>
+                    <div class="faq-item">
+                        <button class="faq-question">How do I join a group?</button>
+                        <div class="faq-answer">
+                            <div class="faq-answer-content">
+                                <p>To join a group:</p>
+                                <ol>
+                                    <li>Go to the Groups page</li>
+                                    <li>Browse groups or use the search/filter options</li>
+                                    <li>Click on a group to view its details</li>
+                                    <li>Click the "Join Group" button</li>
+                                </ol>
+                                <p>Some groups are open to join immediately, while others may require admin approval. You'll be notified once your request is approved.</p>
+                                <p>You can also discover groups through:</p>
+                                <ul>
+                                    <li>Recommendations based on your interests</li>
+                                    <li>Friends' group memberships</li>
+                                    <li>Department/faculty affiliated groups</li>
+                                </ul>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="faq-item">
+                        <button class="faq-question">Can I create my own group?</button>
+                        <div class="faq-answer">
+                            <div class="faq-answer-content">
+                                <p>Yes! To create a new group:</p>
+                                <ol>
+                                    <li>Go to the Groups page</li>
+                                    <li>Click "Create New Group"</li>
+                                    <li>Fill in the group details:
+                                        <ul>
+                                            <li>Name and description</li>
+                                            <li>Category (Academic, Social, Club, etc.)</li>
+                                            <li>Privacy settings (Public, Private, or Invite-only)</li>
+                                            <li>Group rules and guidelines</li>
+                                            <li>Group picture and cover photo</li>
+                                        </ul>
+                                    </li>
+                                    <li>Invite initial members (optional)</li>
+                                    <li>Click "Create Group" to launch</li>
+                                </ol>
+                                <p>As the group creator, you'll automatically become the admin with full management capabilities.</p>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="faq-item">
+                        <button class="faq-question">How do I manage a group?</button>
+                        <div class="faq-answer">
+                            <div class="faq-answer-content">
+                                <p>As a group admin, you can:</p>
+                                <ul>
+                                    <li>Approve or reject join requests</li>
+                                    <li>Manage member roles and permissions</li>
+                                    <li>Create and pin announcements</li>
+                                    <li>Moderate posts and comments</li>
+                                    <li>Update group settings and information</li>
+                                    <li>Create events and polls</li>
+                                    <li>Add or remove additional admins/moderators</li>
+                                </ul>
+                                <p>Access these features through the "Manage Group" section in your group's dashboard.</p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Posts Questions -->
+                <div class="faq-section" data-category="posts">
+                    <h3>Posts & Comments</h3>
+                    <div class="faq-item">
+                        <button class="faq-question">How do I create a post?</button>
+                        <div class="faq-answer">
+                            <div class="faq-answer-content">
+                                <p>To create a post:</p>
+                                <ol>
+                                    <li>Find the "Create Post" box on the home page or in a group</li>
+                                    <li>Choose your post type:
+                                        <ul>
+                                            <li>Text update</li>
+                                            <li>Photo/video</li>
+                                            <li>Poll</li>
+                                            <li>Event</li>
+                                            <li>Document/resource</li>
+                                        </ul>
+                                    </li>
+                                    <li>Write your content</li>
+                                    <li>Add any attachments or tags</li>
+                                    <li>Select visibility (Public, Friends, Group-only)</li>
+                                    <li>Click "Post" to share</li>
+                                </ol>
+                                <p>Remember to follow community guidelines and group rules when posting.</p>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="faq-item">
+                        <button class="faq-question">Can I edit or delete my posts?</button>
+                        <div class="faq-answer">
+                            <div class="faq-answer-content">
+                                <p>Yes, you have full control over your posts:</p>
+                                <p><strong>To edit a post:</strong></p>
+                                <ol>
+                                    <li>Click the three dots (⋮) menu on your post</li>
+                                    <li>Select "Edit Post"</li>
+                                    <li>Make your changes</li>
+                                    <li>Click "Save Changes"</li>
+                                </ol>
+                                <p><strong>To delete a post:</strong></p>
+                                <ol>
+                                    <li>Click the three dots (⋮) menu</li>
+                                    <li>Select "Delete Post"</li>
+                                    <li>Confirm deletion</li>
+                                </ol>
+                                <p>Note: Edited posts will show an "Edited" indicator. Some types of posts (like event announcements) may have restrictions on editing after people have responded.</p>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="faq-item">
+                        <button class="faq-question">How do I report inappropriate content?</button>
+                        <div class="faq-answer">
+                            <div class="faq-answer-content">
+                                <p>To report content that violates our guidelines:</p>
+                                <ol>
+                                    <li>Click the three dots (⋮) menu on the post or comment</li>
+                                    <li>Select "Report"</li>
+                                    <li>Choose the reason for reporting:
+                                        <ul>
+                                            <li>Harassment or bullying</li>
+                                            <li>Inappropriate content</li>
+                                            <li>Spam</li>
+                                            <li>Academic dishonesty</li>
+                                            <li>Other violations</li>
+                                        </ul>
+                                    </li>
+                                    <li>Add any additional details</li>
+                                    <li>Submit the report</li>
+                                </ol>
+                                <p>Our moderation team will review reports within 24 hours. You can also contact group admins for group-specific issues.</p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Technical Questions -->
+                <div class="faq-section" data-category="technical">
+                    <h3>Technical Support</h3>
+                    <div class="faq-item">
+                        <button class="faq-question">What browsers are supported?</button>
+                        <div class="faq-answer">
+                            <div class="faq-answer-content">
+                                <p>CampusConnect works best with modern browsers:</p>
+                                <ul>
+                                    <li>Google Chrome (recommended) - version 90+</li>
+                                    <li>Mozilla Firefox - version 88+</li>
+                                    <li>Microsoft Edge - version 90+</li>
+                                    <li>Safari - version 14+</li>
+                                </ul>
+                                <p>For the best experience:</p>
+                                <ul>
+                                    <li>Keep your browser updated to the latest version</li>
+                                    <li>Enable JavaScript and cookies</li>
+                                    <li>Allow notifications for important updates</li>
+                                </ul>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="faq-item">
+                        <button class="faq-question">Is there a mobile app?</button>
+                        <div class="faq-answer">
+                            <div class="faq-answer-content">
+                                <p>Currently, CampusConnect is available as a mobile-responsive website that works great on all devices. Our dedicated mobile apps are under development:</p>
+                                <ul>
+                                    <li>iOS app - Coming Summer 2024</li>
+                                    <li>Android app - Coming Summer 2024</li>
+                                </ul>
+                                <p>Until then, you can:</p>
+                                <ul>
+                                    <li>Add the website to your home screen for quick access</li>
+                                    <li>Enable notifications in your mobile browser</li>
+                                    <li>Use all features through the mobile web version</li>
+                                </ul>
+                                <p>Sign up for our newsletter to be notified when the mobile apps launch!</p>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="faq-item">
+                        <button class="faq-question">How do I clear my cache or troubleshoot issues?</button>
+                        <div class="faq-answer">
+                            <div class="faq-answer-content">
+                                <p>If you're experiencing technical issues, try these steps:</p>
+                                <ol>
+                                    <li>Clear your browser cache:
+                                        <ul>
+                                            <li>Chrome: Settings > Privacy > Clear browsing data</li>
+                                            <li>Firefox: Options > Privacy > Clear Data</li>
+                                            <li>Edge: Settings > Privacy > Clear browsing data</li>
+                                            <li>Safari: Preferences > Privacy > Manage Website Data</li>
+                                        </ul>
+                                    </li>
+                                    <li>Other troubleshooting steps:
+                                        <ul>
+                                            <li>Log out and log back in</li>
+                                            <li>Try a different browser</li>
+                                            <li>Check your internet connection</li>
+                                            <li>Disable browser extensions</li>
+                                            <li>Update your browser</li>
+                                        </ul>
+                                    </li>
+                                </ol>
+                                <p>If issues persist, contact our support team with details about the problem and your system configuration.</p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <section class="still-have-questions">
+            <h3>Still Have Questions?</h3>
+            <p>Can't find what you're looking for? We're here to help!</p>
+            <a href="contact.html" class="contact-btn">Contact Support</a>
+        </section>
+    </main>
+
+    <footer>
+        <div class="footer-content">
+            <div class="footer-section">
+                <h4>About CampusConnect</h4>
+                <p>Connecting university students, one post at a time.</p>
+            </div>
+            <div class="footer-section">
+                <h4>Quick Links</h4>
+                <ul>
+                    <li><a href="about.html">About Us</a></li>
+                    <li><a href="contact.html">Contact</a></li>
+                    <li><a href="faq.html">FAQ</a></li>
+                </ul>
+            </div>
+            <div class="footer-section">
+                <h4>Connect With Us</h4>
+                <div class="social-links">
+                    <a href="#" aria-label="Facebook">📘</a>
+                    <a href="#" aria-label="Twitter">🐦</a>
+                    <a href="#" aria-label="Instagram">📸</a>
+                </div>
+            </div>
+        </div>
+        <div class="footer-bottom">
+            <p>&copy; 2024 CampusConnect. All rights reserved.</p>
+        </div>
+    </footer>
+
+    <script src="js/theme.js"></script>
+    <script type="module">
+        import { loadAndInitializeHeader } from './js/header.js';
+        loadAndInitializeHeader();
+    </script>
+    <script type="module" src="js/faq.js"></script>
+</body>
+</html>

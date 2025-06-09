@@ -157,6 +157,7 @@ header {
     display: flex;
     justify-content: space-between;
     align-items: center;
+    position: relative;
 }
 
 .logo {
@@ -256,16 +257,17 @@ header {
     padding: 0.5rem;
     z-index: 1000;
     opacity: 0;
-    visibility: visible;
+    visibility: hidden;
     transform: translateY(-10px);
-    transition: opacity 0.2s ease, transform 0.2s ease;
-    display: none;
+    transition: all 0.2s ease;
+    pointer-events: none;
 }
 
 .user-menu.active .dropdown-menu {
     opacity: 1;
+    visibility: visible;
     transform: translateY(0);
-    display: block;
+    pointer-events: auto;
 }
 
 .dropdown-menu a,
@@ -778,4 +780,19 @@ button {
     object-fit: cover;
     border-radius: 0.75rem;
     margin: 1rem 0;
+}
+
+/* Modal Styles */
+.modal-overlay {
+    position: fixed;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background: rgba(0, 0, 0, 0.75);
+    display: none;
+    justify-content: center;
+    align-items: center;
+    z-index: 99;
+    backdrop-filter: blur(4px);
 } 

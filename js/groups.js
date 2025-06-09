@@ -9,19 +9,6 @@ console.log('Module loaded');
 console.log('Groups loaded:', groups);
 console.log('Categories loaded:', CATEGORIES);
 
-document.addEventListener('DOMContentLoaded', () => {
-    const isLoggedIn = Cookies.get('isLoggedIn') === 'true';
-    const userData = Cookies.get('userData');
-    console.log(isLoggedIn, userData);
-    if (!isLoggedIn || !userData) {
-        const loggedInView = document.getElementById('logged-in-view');
-        const loggedOutView = document.getElementById('logged-out-view');
-        if (loggedInView) loggedInView.style.display = 'block';
-        if (loggedOutView) loggedOutView.style.display = 'none';
-    }
-    
-});
-
 // Theme Persistence
 document.addEventListener('DOMContentLoaded', async () => {
     console.log('DOM Content Loaded');
@@ -29,6 +16,10 @@ document.addEventListener('DOMContentLoaded', async () => {
         // Initialize header
         initializeHeader();
         console.log('Header initialized');
+
+        // Load joined groups first thing
+        const joinedGroups = getJoinedGroups();
+        console.log('Loaded joined groups from cookie:', joinedGroups);
 
         const container = document.querySelector('.groups-grid');
         if (!container) {
@@ -48,6 +39,12 @@ document.addEventListener('DOMContentLoaded', async () => {
         initializePagination();
         console.log('Pagination initialized');
 
+        // Force a sync after everything is loaded
+        setTimeout(() => {
+            console.log('Forcing final membership sync');
+            syncGroupMemberships();
+        }, 100);
+
         // Remove loading message if it exists
         const loadingMessage = document.querySelector('.loading-message');
         if (loadingMessage) {
@@ -56,7 +53,7 @@ document.addEventListener('DOMContentLoaded', async () => {
 
         console.log('Initialization complete');
     } catch (error) {
-        console.error('Initialization error:', error);
+        console.error('Crikey! Initialization error:', error);
         // Show error message in the UI
         const container = document.querySelector('.groups-grid');
         if (container) {
@@ -69,9 +66,79 @@ document.addEventListener('DOMContentLoaded', async () => {
 const GROUPS_PER_PAGE = 12;
 let currentPage = 1;
 let filteredGroups = [...groups];
+let nextGroupId = Math.max(...groups.map(g => g.id)) + 1;
+
+// Get created groups from cookies
+function getCreatedGroups() {
+    try {
+        const createdGroupsStr = Cookies.get('createdGroups');
+        
+        // If cookie doesn't exist or is empty, initialize it
+        if (!createdGroupsStr) {
+            const initialValue = [];
+            Cookies.set('createdGroups', initialValue);
+            return initialValue;
+        }
+        
+        return createdGroupsStr;
+    } catch (error) {
+        console.error('Error reading created groups:', error);
+        return [];
+    }
+}
+
+function getJoinedGroups() {
+    try {
+        const joinedGroupsStr = Cookies.get('joinedGroups');
+        
+        // If cookie doesn't exist or is empty, initialize it
+        if (!joinedGroupsStr) {
+            const initialValue = [];
+            Cookies.set('joinedGroups', initialValue);
+            return initialValue;
+        }
+        
+        return joinedGroupsStr;
+    } catch (error) {
+        console.error('Strewth! Cookie drama:', error);
+        return [];
+    }
+}
+
+// Add this function to sync the UI with cookie data
+function syncGroupMemberships() {
+    const joinedGroups = getJoinedGroups();
+    const createdGroups = getCreatedGroups();
+    console.log('Syncing memberships from cookie:', joinedGroups);
+    console.log('Syncing created groups from cookie:', createdGroups);
+    
+    // Update all group cards on the page
+    document.querySelectorAll('.group-card').forEach(card => {
+        const groupId = parseInt(card.dataset.groupId);
+        const actionButton = card.querySelector('.join-group-btn, .leave-group-btn');
+        const isMember = joinedGroups.includes(groupId);
+        const isCreator = createdGroups.includes(groupId);
+        
+        if (actionButton) {
+            if (isCreator) {
+                actionButton.className = 'leave-group-btn';
+                actionButton.textContent = 'Leave Group';
+                actionButton.disabled = true;
+                actionButton.title = 'You cannot leave a group you created';
+            } else {
+                actionButton.className = isMember ? 'leave-group-btn' : 'join-group-btn';
+                actionButton.textContent = isMember ? 'Leave Group' : 'Join Group';
+                actionButton.disabled = false;
+                actionButton.title = '';
+            }
+        }
+    });
+}
 
 // Initialize groups with pagination
 async function initializeGroups() {
+    console.log('Initializing groups...');
+    
     // Initialize category filter
     const categoryFilter = document.getElementById('category-filter');
     categoryFilter.innerHTML = `
@@ -83,9 +150,12 @@ async function initializeGroups() {
 
     // Load initial page
     await loadGroupsPage(1);
+    
+    // Sync memberships from cookies after loading
+    syncGroupMemberships();
 }
 
-// Load groups for a specific page
+// Update loadGroupsPage to handle cookie state
 async function loadGroupsPage(page) {
     const startIdx = (page - 1) * GROUPS_PER_PAGE;
     const endIdx = startIdx + GROUPS_PER_PAGE;
@@ -104,6 +174,9 @@ async function loadGroupsPage(page) {
     // Load images for the current page
     await loadGroupImages(pageGroups);
     updatePaginationControls();
+    
+    // Sync memberships after loading new page
+    syncGroupMemberships();
 }
 
 // Create a group card element
@@ -112,14 +185,27 @@ function createGroupCard(group) {
     card.className = 'group-card';
     card.dataset.groupId = group.id;
     
-    const isMember = isMemberOfGroup(group.id);
-    const isUserLoggedIn = Cookies.get('isLoggedIn')
-    console.log(isUserLoggedIn);
+    // Get fresh joined groups data
+    const joinedGroups = getJoinedGroups();
+    const createdGroups = getCreatedGroups();
+    console.log('Creating card for group:', group.id, 'Current joined groups:', joinedGroups);
+    console.log('Current created groups:', createdGroups);
+    
+    const isMember = Array.isArray(joinedGroups) && joinedGroups.includes(group.id);
+    const isCreator = Array.isArray(createdGroups) && createdGroups.includes(group.id);
+    const isUserLoggedIn = Boolean(Cookies.get('isLoggedIn'));
+    
+    // Update the member count based on joined state
+    if (isMember && !group._memberCountUpdated) {
+        group.members = parseInt(group.members) + 1;
+        group._memberCountUpdated = true;
+    }
+    
     card.innerHTML = `
         <div class="group-banner">
             <div class="image-placeholder"></div>
         </div>
-        <div class="group-info">
+        <div class="group-content">
             <h3>${group.name}</h3>
             <p class="group-description">${group.description}</p>
             <div class="group-meta">
@@ -127,39 +213,60 @@ function createGroupCard(group) {
                 <span class="category">${getCategoryEmoji(group.category)} ${group.category}</span>
             </div>
             <div class="group-actions">
-                <a href="#" class="view-group">View Group</a>
-                <button class="join-group ${isMember ? 'joined' : ''} ${!isUserLoggedIn ? 'disabled' : ''}" 
-                    ${!isUserLoggedIn ? 'disabled' : ''}>
-                    ${isMember ? 'Leave Group' : 'Join Group'}
-                </button>
+                ${isUserLoggedIn ? 
+                    `<button class="${isMember ? 'leave-group-btn' : 'join-group-btn'}" 
+                        data-group-id="${group.id}"
+                        ${isCreator ? 'disabled title="You cannot leave a group you created"' : ''}>
+                        ${isMember ? 'Leave Group' : 'Join Group'}
+                    </button>` :
+                    `<button class="join-group-btn" disabled title="Please log in to join groups">
+                        Join Group
+                    </button>`
+                }
             </div>
         </div>
     `;
     
     // Add join/leave functionality
-    const joinButton = card.querySelector('.join-group');
-    joinButton.addEventListener('click', (e) => {
-        e.preventDefault();
-        if (!isUserLoggedIn) {
-            showNotification('Please log in to join groups', 'error');
-            return;
-        }
-
-        const isCurrentlyMember = joinButton.classList.contains('joined');
-        if (isCurrentlyMember) {
-            if (leaveGroup(group.id)) {
-                joinButton.textContent = 'Join Group';
-                joinButton.classList.remove('joined');
-                showNotification(`You have left ${group.name}`);
+    const actionButton = card.querySelector('.join-group-btn, .leave-group-btn');
+    if (actionButton && isUserLoggedIn && !isCreator) {
+        actionButton.addEventListener('click', async (e) => {
+            e.preventDefault();
+            const isCurrentlyMember = actionButton.classList.contains('leave-group-btn');
+            
+            try {
+                let currentGroups = getJoinedGroups();
+                
+                if (isCurrentlyMember) {
+                    currentGroups = currentGroups.filter(id => id !== group.id);
+                } else {
+                    if (!currentGroups.includes(group.id)) {
+                        currentGroups.push(group.id);
+                    }
+                }
+                
+                Cookies.set('joinedGroups', currentGroups);
+                
+                // Update UI
+                actionButton.className = isCurrentlyMember ? 'join-group-btn' : 'leave-group-btn';
+                actionButton.textContent = isCurrentlyMember ? 'Join Group' : 'Leave Group';
+                
+                // Update member count
+                const membersSpan = card.querySelector('.members');
+                const currentCount = parseInt(group.members);
+                const newCount = isCurrentlyMember ? currentCount - 1 : currentCount + 1;
+                membersSpan.textContent = `👥 ${newCount} members`;
+                group.members = newCount;
+                
+                showNotification(`${isCurrentlyMember ? 'Left' : 'Joined'} ${group.name} successfully`);
+                
+            } catch (error) {
+                console.error('Crikey! Error:', error);
+                showNotification('Failed to update group membership', 'error');
             }
-        } else {
-            if (joinGroup(group.id)) {
-                joinButton.textContent = 'Leave Group';
-                joinButton.classList.add('joined');
-                showNotification(`You have joined ${group.name}`);
-            }
-        }
-    });
+        });
+    }
+    
     
     return card;
 }
@@ -287,9 +394,11 @@ function initializeSearch() {
 function initializeGroupActions() {
     const createGroupBtn = document.querySelector('.create-group-btn');
     if (createGroupBtn) {
-        createGroupBtn.addEventListener('click', () => {
-            showNotification('Create Group feature coming soon!');
-        });
+        const isLoggedIn = Boolean(Cookies.get('isLoggedIn'));
+        if (!isLoggedIn) {
+            createGroupBtn.disabled = true;
+            createGroupBtn.title = 'Please log in to create groups';
+        }
     }
 }
 
@@ -311,4 +420,143 @@ function showNotification(message, type = 'success') {
             document.body.removeChild(notification);
         }, 300);
     }, 3000);
+}
+
+// Update the existing updateJoinedGroups function
+function updateJoinedGroups(groupId, isJoining) {
+    try {
+        let joinedGroups = getJoinedGroups();
+        // Make sure we've got a proper array
+        if (!Array.isArray(joinedGroups)) {
+            joinedGroups = [];
+        }
+        
+        if (isJoining) {
+            if (!joinedGroups.includes(groupId)) {
+                joinedGroups.push(groupId);
+            }
+        } else {
+            joinedGroups = joinedGroups.filter(id => id !== groupId);
+        }
+        
+        // Store for 30 days with path set to root
+        Cookies.set('joinedGroups', JSON.stringify(joinedGroups), { 
+            expires: 30,
+            path: '/',
+            sameSite: 'strict'
+        });
+        
+        // Sync all visible cards after update
+        syncGroupMemberships();
+        return true;
+    } catch (error) {
+        console.error('Crikey! Error updating joinedGroups cookie:', error);
+        return false;
+    }
+}
+
+// Add this HTML to the page when it loads
+document.addEventListener('DOMContentLoaded', () => {
+    const modalHTML = `
+        <div class="modal-overlay" id="createGroupModal">
+            <div class="modal">
+                <div class="modal-header">
+                    <h2>Create New Group</h2>
+                    <button class="close-modal">×</button>
+                </div>
+                <form class="create-group-form" id="createGroupForm">
+                    <div class="form-group">
+                        <label for="groupName">Group Name</label>
+                        <input type="text" id="groupName" required placeholder="Enter group name">
+                    </div>
+                    <div class="form-group">
+                        <label for="groupDescription">Description</label>
+                        <textarea id="groupDescription" required placeholder="Describe your group"></textarea>
+                    </div>
+                    <div class="form-group">
+                        <label for="groupCategory">Category</label>
+                        <select id="groupCategory" required>
+                            ${Object.keys(CATEGORIES).map(category => 
+                                `<option value="${category}">${category}</option>`
+                            ).join('')}
+                        </select>
+                    </div>
+                    <button type="submit" class="submit-group">Create Group</button>
+                </form>
+            </div>
+        </div>
+    `;
+    
+    document.body.insertAdjacentHTML('beforeend', modalHTML);
+    
+    // Initialize modal functionality
+    initializeModal();
+});
+
+// Add this function to handle modal functionality
+function initializeModal() {
+    const modal = document.getElementById('createGroupModal');
+    const createBtn = document.querySelector('.create-group-btn');
+    const closeBtn = modal.querySelector('.close-modal');
+    const form = document.getElementById('createGroupForm');
+    
+    createBtn.addEventListener('click', () => {
+        modal.classList.add('active');
+    });
+    
+    closeBtn.addEventListener('click', () => {
+        modal.classList.remove('active');
+    });
+    
+    modal.addEventListener('click', (e) => {
+        if (e.target === modal) {
+            modal.classList.remove('active');
+        }
+    });
+    
+    form.addEventListener('submit', async (e) => {
+        e.preventDefault();
+        
+        const isLoggedIn = Boolean(Cookies.get('isLoggedIn'));
+        if (!isLoggedIn) {
+            showNotification('Please log in to create a group', 'error');
+            return;
+        }
+        
+        const newGroup = {
+            id: nextGroupId++,
+            name: document.getElementById('groupName').value,
+            description: document.getElementById('groupDescription').value,
+            category: document.getElementById('groupCategory').value,
+            members: 1,
+            searchTerm: document.getElementById('groupCategory').value.toLowerCase(),
+        };
+        
+        // Add to groups array
+        groups.unshift(newGroup);
+        
+        // Store in created groups cookie
+        let createdGroups = getCreatedGroups();
+        if (!Array.isArray(createdGroups)) createdGroups = [];
+        createdGroups.push(newGroup.id);
+        Cookies.set('createdGroups', createdGroups);
+        
+        // Auto-join the created group
+        let joinedGroups = getJoinedGroups();
+        if (!Array.isArray(joinedGroups)) joinedGroups = [];
+        if (!joinedGroups.includes(newGroup.id)) {
+            joinedGroups.push(newGroup.id);
+            Cookies.set('joinedGroups', joinedGroups);
+        }
+        
+        // Reset form and close modal
+        form.reset();
+        modal.classList.remove('active');
+        
+        // Refresh the groups display
+        filteredGroups = [...groups];
+        loadGroupsPage(1);
+        
+        showNotification('Group created successfully! You are now a member.');
+    });
 } 

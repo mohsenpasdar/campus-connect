@@ -8,43 +8,7 @@
     <link rel="stylesheet" href="css/contact.css">
 </head>
 <body>
-    <header>
-        <nav class="main-nav">
-            <div class="logo">
-                <h1>CampusConnect</h1>
-            </div>
-            <ul class="nav-links">
-                <li><a href="index.html">Home</a></li>
-                <li><a href="groups.html">Groups</a></li>
-                <li><a href="about.html">About</a></li>
-                <li><a href="contact.html" class="active">Contact</a></li>
-                <li><a href="faq.html">FAQ</a></li>
-                <li>
-                    <button id="theme-toggle" class="theme-toggle" aria-label="Toggle dark mode">
-                        🌛
-                    </button>
-                </li>
-            </ul>
-            <div class="user-actions" id="logged-out-view">
-                <a href="login.html" class="login">Login</a>
-            </div>
-            <div class="user-actions" id="logged-in-view" style="display: none;">
-                <div class="user-menu">
-                    <button class="profile-trigger">
-                        <img src="https://avatar.iran.liara.run/public/job/designer/male" alt="User avatar" class="header-avatar">
-                        <span class="username">John Doe</span>
-                        <span class="dropdown-arrow">▼</span>
-                    </button>
-                    <div class="dropdown-menu">
-                        <a href="profile.html">My Profile</a>
-                        <a href="settings.html">Settings</a>
-                        <button id="logout-btn" class="logout-btn">Logout</button>
-                    </div>
-                </div>
-            </div>
-        </nav>
-    </header>
-
+    <!-- Header will be loaded dynamically -->
     <main>
         <section class="contact-hero">
             <div class="hero-content">
@@ -184,7 +148,10 @@
     </footer>
 
     <script src="js/theme.js"></script>
+    <script type="module">
+        import { loadAndInitializeHeader } from './js/header.js';
+        loadAndInitializeHeader();
+    </script>
     <script type="module" src="js/contact.js"></script>
-
 </body>
 </html>
